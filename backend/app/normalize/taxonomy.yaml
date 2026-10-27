@@ -1,0 +1,656 @@
+# Canonical make/model/generation taxonomy for the Dutch used-car market.
+#
+# - `aliases` are matched case-insensitively against the raw make/model/title text
+#   (word-boundary match; longest alias wins). Prefix an alias with `re:` for a regex.
+# - `hints` let an alias imply a body type or fuel (e.g. "golf variant" → stationwagen).
+# - Generation year ranges are by model year of first registration (best effort; transition
+#   years overlap, so the newest generation whose `from` <= year wins unless a generation
+#   keyword in the title says otherwise).
+# - `segment`: A (city), B (small), C (compact), D (mid), E (large), SUV-B/C/D, MPV, SPORT, LUX.
+
+makes:
+  - slug: volkswagen
+    name: Volkswagen
+    aliases: [volkswagen, vw]
+    models:
+      - {slug: up, name: up!, aliases: ["up!", "up", "e-up", "e-up!"], segment: A, body: hatchback,
+         generations: [{id: up-1, name: "up! (2011–2023)", from: 2011, to: 2023}]}
+      - {slug: polo, name: Polo, aliases: [polo], segment: B, body: hatchback,
+         generations: [{id: polo-6r, name: "Polo 6R/6C (2009–2017)", from: 2009, to: 2017, keywords: [6r, 6c]},
+                       {id: polo-aw, name: "Polo AW (2017–heden)", from: 2018, to: null, keywords: [aw]}]}
+      - {slug: golf, name: Golf, aliases: [golf, "golf variant", "golf sportsvan", "e-golf", "golf gte", "golf gti"], segment: C, body: hatchback,
+         hints: {"golf variant": {body: stationwagen}, "e-golf": {fuel: elektrisch}, "golf gte": {fuel: plugin_hybride}},
+         generations: [{id: golf-6, name: "Golf 6 (2008–2012)", from: 2008, to: 2012, keywords: ["golf 6", "golf vi", mk6]},
+                       {id: golf-7, name: "Golf 7 (2012–2019)", from: 2013, to: 2019, keywords: ["golf 7", "golf vii", mk7, "7.5"]},
+                       {id: golf-8, name: "Golf 8 (2019–heden)", from: 2020, to: null, keywords: ["golf 8", "golf viii", mk8]}]}
+      - {slug: t-roc, name: T-Roc, aliases: [t-roc, troc, "t roc"], segment: SUV-C, body: suv,
+         generations: [{id: t-roc-1, name: "T-Roc (2017–heden)", from: 2017, to: null}]}
+      - {slug: t-cross, name: T-Cross, aliases: [t-cross, tcross, "t cross"], segment: SUV-B, body: suv,
+         generations: [{id: t-cross-1, name: "T-Cross (2019–heden)", from: 2019, to: null}]}
+      - {slug: taigo, name: Taigo, aliases: [taigo], segment: SUV-B, body: suv,
+         generations: [{id: taigo-1, name: "Taigo (2021–heden)", from: 2021, to: null}]}
+      - {slug: tiguan, name: Tiguan, aliases: [tiguan, "tiguan allspace"], segment: SUV-C, body: suv,
+         generations: [{id: tiguan-2, name: "Tiguan II (2016–2023)", from: 2016, to: 2023},
+                       {id: tiguan-3, name: "Tiguan III (2024–heden)", from: 2024, to: null}]}
+      - {slug: touran, name: Touran, aliases: [touran], segment: MPV, body: mpv,
+         generations: [{id: touran-2, name: "Touran II (2015–2024)", from: 2015, to: 2024}]}
+      - {slug: passat, name: Passat, aliases: [passat, "passat variant", "passat gte"], segment: D, body: stationwagen,
+         hints: {"passat gte": {fuel: plugin_hybride}},
+         generations: [{id: passat-b8, name: "Passat B8 (2014–2023)", from: 2015, to: 2023, keywords: [b8]},
+                       {id: passat-b9, name: "Passat B9 (2024–heden)", from: 2024, to: null, keywords: [b9]}]}
+      - {slug: arteon, name: Arteon, aliases: [arteon], segment: D, body: sedan,
+         generations: [{id: arteon-1, name: "Arteon (2017–2024)", from: 2017, to: 2024}]}
+      - {slug: id-3, name: ID.3, aliases: ["id.3", "id3", "id 3"], segment: C, body: hatchback, fuel: elektrisch,
+         generations: [{id: id-3-1, name: "ID.3 (2020–heden)", from: 2020, to: null}]}
+      - {slug: id-4, name: ID.4, aliases: ["id.4", "id4", "id 4"], segment: SUV-C, body: suv, fuel: elektrisch,
+         generations: [{id: id-4-1, name: "ID.4 (2021–heden)", from: 2021, to: null}]}
+      - {slug: id-5, name: ID.5, aliases: ["id.5", "id5", "id 5"], segment: SUV-C, body: suv, fuel: elektrisch,
+         generations: [{id: id-5-1, name: "ID.5 (2022–heden)", from: 2022, to: null}]}
+      - {slug: touareg, name: Touareg, aliases: [touareg], segment: SUV-D, body: suv,
+         generations: [{id: touareg-3, name: "Touareg III (2018–heden)", from: 2018, to: null}]}
+
+  - slug: peugeot
+    name: Peugeot
+    aliases: [peugeot]
+    models:
+      - {slug: "108", name: "108", aliases: ["108"], segment: A, body: hatchback,
+         generations: [{id: 108-1, name: "108 (2014–2021)", from: 2014, to: 2021}]}
+      - {slug: "208", name: "208", aliases: ["208", "e-208"], segment: B, body: hatchback,
+         hints: {"e-208": {fuel: elektrisch}},
+         generations: [{id: 208-1, name: "208 I (2012–2019)", from: 2012, to: 2019},
+                       {id: 208-2, name: "208 II (2019–heden)", from: 2020, to: null}]}
+      - {slug: "2008", name: "2008", aliases: ["2008", "e-2008"], segment: SUV-B, body: suv,
+         hints: {"e-2008": {fuel: elektrisch}},
+         generations: [{id: 2008-1, name: "2008 I (2013–2019)", from: 2013, to: 2019},
+                       {id: 2008-2, name: "2008 II (2019–heden)", from: 2020, to: null}]}
+      - {slug: "308", name: "308", aliases: ["308", "308 sw", "e-308"], segment: C, body: hatchback,
+         hints: {"308 sw": {body: stationwagen}, "e-308": {fuel: elektrisch}},
+         generations: [{id: 308-2, name: "308 II (2013–2021)", from: 2014, to: 2021},
+                       {id: 308-3, name: "308 III (2021–heden)", from: 2022, to: null}]}
+      - {slug: "3008", name: "3008", aliases: ["3008", "e-3008"], segment: SUV-C, body: suv,
+         generations: [{id: 3008-2, name: "3008 II (2016–2023)", from: 2017, to: 2023},
+                       {id: 3008-3, name: "3008 III (2024–heden)", from: 2024, to: null}]}
+      - {slug: "5008", name: "5008", aliases: ["5008"], segment: SUV-D, body: suv,
+         generations: [{id: 5008-2, name: "5008 II (2017–2023)", from: 2017, to: 2023}]}
+      - {slug: "508", name: "508", aliases: ["508", "508 sw"], segment: D, body: sedan,
+         hints: {"508 sw": {body: stationwagen}},
+         generations: [{id: 508-2, name: "508 II (2018–heden)", from: 2019, to: null}]}
+
+  - slug: kia
+    name: Kia
+    aliases: [kia]
+    models:
+      - {slug: picanto, name: Picanto, aliases: [picanto], segment: A, body: hatchback,
+         generations: [{id: picanto-2, name: "Picanto II (2011–2017)", from: 2011, to: 2017},
+                       {id: picanto-3, name: "Picanto III (2017–heden)", from: 2017, to: null}]}
+      - {slug: rio, name: Rio, aliases: [rio], segment: B, body: hatchback,
+         generations: [{id: rio-4, name: "Rio IV (2017–2023)", from: 2017, to: 2023}]}
+      - {slug: stonic, name: Stonic, aliases: [stonic], segment: SUV-B, body: suv,
+         generations: [{id: stonic-1, name: "Stonic (2017–heden)", from: 2017, to: null}]}
+      - {slug: ceed, name: Ceed, aliases: [ceed, "cee'd", "ceed sportswagon", proceed], segment: C, body: hatchback,
+         hints: {"ceed sportswagon": {body: stationwagen}},
+         generations: [{id: ceed-3, name: "Ceed III (2018–heden)", from: 2018, to: null}]}
+      - {slug: xceed, name: XCeed, aliases: [xceed], segment: SUV-C, body: suv,
+         generations: [{id: xceed-1, name: "XCeed (2019–heden)", from: 2019, to: null}]}
+      - {slug: niro, name: Niro, aliases: [niro, "e-niro", "niro ev", "niro plug-in"], segment: SUV-C, body: suv,
+         hints: {"e-niro": {fuel: elektrisch}, "niro ev": {fuel: elektrisch}, "niro plug-in": {fuel: plugin_hybride}},
+         generations: [{id: niro-1, name: "Niro I (2016–2022)", from: 2016, to: 2022},
+                       {id: niro-2, name: "Niro II (2022–heden)", from: 2023, to: null}]}
+      - {slug: sportage, name: Sportage, aliases: [sportage], segment: SUV-C, body: suv,
+         generations: [{id: sportage-4, name: "Sportage IV (2016–2021)", from: 2016, to: 2021},
+                       {id: sportage-5, name: "Sportage V (2022–heden)", from: 2022, to: null}]}
+      - {slug: ev6, name: EV6, aliases: [ev6, "ev 6"], segment: SUV-C, body: suv, fuel: elektrisch,
+         generations: [{id: ev6-1, name: "EV6 (2021–heden)", from: 2021, to: null}]}
+      - {slug: sorento, name: Sorento, aliases: [sorento], segment: SUV-D, body: suv,
+         generations: [{id: sorento-4, name: "Sorento IV (2020–heden)", from: 2020, to: null}]}
+
+  - slug: toyota
+    name: Toyota
+    aliases: [toyota]
+    models:
+      - {slug: aygo, name: Aygo, aliases: [aygo], segment: A, body: hatchback,
+         generations: [{id: aygo-2, name: "Aygo II (2014–2022)", from: 2014, to: 2022}]}
+      - {slug: aygo-x, name: Aygo X, aliases: ["aygo x"], segment: A, body: hatchback,
+         generations: [{id: aygo-x-1, name: "Aygo X (2022–heden)", from: 2022, to: null}]}
+      - {slug: yaris, name: Yaris, aliases: [yaris, "yaris hybrid"], segment: B, body: hatchback,
+         generations: [{id: yaris-3, name: "Yaris III (2011–2020)", from: 2011, to: 2020},
+                       {id: yaris-4, name: "Yaris IV (2020–heden)", from: 2021, to: null}]}
+      - {slug: yaris-cross, name: Yaris Cross, aliases: ["yaris cross"], segment: SUV-B, body: suv,
+         generations: [{id: yaris-cross-1, name: "Yaris Cross (2021–heden)", from: 2021, to: null}]}
+      - {slug: auris, name: Auris, aliases: [auris, "auris touring sports"], segment: C, body: hatchback,
+         hints: {"auris touring sports": {body: stationwagen}},
+         generations: [{id: auris-2, name: "Auris II (2012–2018)", from: 2013, to: 2018}]}
+      - {slug: corolla, name: Corolla, aliases: [corolla, "corolla touring sports"], segment: C, body: hatchback,
+         hints: {"corolla touring sports": {body: stationwagen}},
+         generations: [{id: corolla-12, name: "Corolla E210 (2019–heden)", from: 2019, to: null}]}
+      - {slug: c-hr, name: C-HR, aliases: [c-hr, chr, "c hr"], segment: SUV-C, body: suv,
+         generations: [{id: c-hr-1, name: "C-HR I (2016–2023)", from: 2017, to: 2023},
+                       {id: c-hr-2, name: "C-HR II (2024–heden)", from: 2024, to: null}]}
+      - {slug: rav4, name: RAV4, aliases: [rav4, "rav 4"], segment: SUV-D, body: suv,
+         generations: [{id: rav4-4, name: "RAV4 IV (2013–2018)", from: 2013, to: 2018},
+                       {id: rav4-5, name: "RAV4 V (2019–heden)", from: 2019, to: null}]}
+      - {slug: prius, name: Prius, aliases: [prius, "prius plug-in", "prius+", "prius plus"], segment: C, body: hatchback,
+         generations: [{id: prius-3, name: "Prius III (2009–2015)", from: 2009, to: 2015},
+                       {id: prius-4, name: "Prius IV (2016–2022)", from: 2016, to: 2022}]}
+      - {slug: bz4x, name: bZ4X, aliases: [bz4x], segment: SUV-C, body: suv, fuel: elektrisch,
+         generations: [{id: bz4x-1, name: "bZ4X (2022–heden)", from: 2022, to: null}]}
+
+  - slug: opel
+    name: Opel
+    aliases: [opel]
+    models:
+      - {slug: karl, name: Karl, aliases: [karl], segment: A, body: hatchback,
+         generations: [{id: karl-1, name: "Karl (2015–2019)", from: 2015, to: 2019}]}
+      - {slug: corsa, name: Corsa, aliases: [corsa, "corsa-e", "corsa e"], segment: B, body: hatchback,
+         hints: {"corsa-e": {fuel: elektrisch}, "corsa e": {fuel: elektrisch}},
+         generations: [{id: corsa-e, name: "Corsa E (2014–2019)", from: 2015, to: 2019},
+                       {id: corsa-f, name: "Corsa F (2019–heden)", from: 2020, to: null}]}
+      - {slug: astra, name: Astra, aliases: [astra, "astra sports tourer"], segment: C, body: hatchback,
+         hints: {"astra sports tourer": {body: stationwagen}},
+         generations: [{id: astra-k, name: "Astra K (2015–2021)", from: 2016, to: 2021},
+                       {id: astra-l, name: "Astra L (2021–heden)", from: 2022, to: null}]}
+      - {slug: mokka, name: Mokka, aliases: [mokka, "mokka-e", "mokka x"], segment: SUV-B, body: suv,
+         hints: {"mokka-e": {fuel: elektrisch}},
+         generations: [{id: mokka-a, name: "Mokka (X) (2012–2019)", from: 2012, to: 2019},
+                       {id: mokka-b, name: "Mokka B (2020–heden)", from: 2021, to: null}]}
+      - {slug: crossland, name: Crossland, aliases: [crossland, "crossland x"], segment: SUV-B, body: suv,
+         generations: [{id: crossland-1, name: "Crossland (2017–2024)", from: 2017, to: 2024}]}
+      - {slug: grandland, name: Grandland, aliases: [grandland, "grandland x"], segment: SUV-C, body: suv,
+         generations: [{id: grandland-1, name: "Grandland (2017–2024)", from: 2018, to: 2024}]}
+      - {slug: insignia, name: Insignia, aliases: [insignia, "insignia sports tourer"], segment: D, body: stationwagen,
+         generations: [{id: insignia-b, name: "Insignia B (2017–2022)", from: 2017, to: 2022}]}
+
+  - slug: renault
+    name: Renault
+    aliases: [renault]
+    models:
+      - {slug: twingo, name: Twingo, aliases: [twingo], segment: A, body: hatchback,
+         generations: [{id: twingo-3, name: "Twingo III (2014–2024)", from: 2014, to: 2024}]}
+      - {slug: clio, name: Clio, aliases: [clio, "clio estate"], segment: B, body: hatchback,
+         hints: {"clio estate": {body: stationwagen}},
+         generations: [{id: clio-4, name: "Clio IV (2012–2019)", from: 2013, to: 2019},
+                       {id: clio-5, name: "Clio V (2019–heden)", from: 2020, to: null}]}
+      - {slug: captur, name: Captur, aliases: [captur], segment: SUV-B, body: suv,
+         generations: [{id: captur-1, name: "Captur I (2013–2019)", from: 2013, to: 2019},
+                       {id: captur-2, name: "Captur II (2019–heden)", from: 2020, to: null}]}
+      - {slug: megane, name: Mégane, aliases: [megane, mégane, "megane estate"], segment: C, body: hatchback,
+         hints: {"megane estate": {body: stationwagen}},
+         generations: [{id: megane-4, name: "Mégane IV (2016–2023)", from: 2016, to: 2023}]}
+      - {slug: megane-e-tech, name: Mégane E-Tech Electric, aliases: ["megane e-tech electric", "mégane e-tech electric", "megane e-tech"], segment: C, body: hatchback, fuel: elektrisch,
+         generations: [{id: megane-e-tech-1, name: "Mégane E-Tech (2022–heden)", from: 2022, to: null}]}
+      - {slug: zoe, name: ZOE, aliases: [zoe, zoé], segment: B, body: hatchback, fuel: elektrisch,
+         generations: [{id: zoe-1, name: "ZOE (2012–2019)", from: 2013, to: 2019, keywords: [q90, r90, q210, r240, "22 kwh", "41 kwh"]},
+                       {id: zoe-2, name: "ZOE Phase 2 (2019–2024)", from: 2020, to: 2024, keywords: [r110, r135, "52 kwh"]}]}
+      - {slug: kadjar, name: Kadjar, aliases: [kadjar], segment: SUV-C, body: suv,
+         generations: [{id: kadjar-1, name: "Kadjar (2015–2022)", from: 2015, to: 2022}]}
+      - {slug: arkana, name: Arkana, aliases: [arkana], segment: SUV-C, body: suv,
+         generations: [{id: arkana-1, name: "Arkana (2021–heden)", from: 2021, to: null}]}
+      - {slug: austral, name: Austral, aliases: [austral], segment: SUV-C, body: suv,
+         generations: [{id: austral-1, name: "Austral (2022–heden)", from: 2023, to: null}]}
+
+  - slug: ford
+    name: Ford
+    aliases: [ford]
+    models:
+      - {slug: ka, name: Ka+, aliases: ["ka+", "ka plus", ka], segment: A, body: hatchback,
+         generations: [{id: ka-plus-1, name: "Ka+ (2016–2020)", from: 2016, to: 2020}]}
+      - {slug: fiesta, name: Fiesta, aliases: [fiesta], segment: B, body: hatchback,
+         generations: [{id: fiesta-7, name: "Fiesta Mk7 (2008–2017)", from: 2009, to: 2017},
+                       {id: fiesta-8, name: "Fiesta Mk8 (2017–2023)", from: 2018, to: 2023}]}
+      - {slug: focus, name: Focus, aliases: [focus, "focus wagon"], segment: C, body: hatchback,
+         hints: {"focus wagon": {body: stationwagen}},
+         generations: [{id: focus-3, name: "Focus Mk3 (2011–2018)", from: 2011, to: 2018},
+                       {id: focus-4, name: "Focus Mk4 (2018–2025)", from: 2019, to: 2025}]}
+      - {slug: puma, name: Puma, aliases: [puma], segment: SUV-B, body: suv,
+         generations: [{id: puma-2, name: "Puma (2019–heden)", from: 2020, to: null}]}
+      - {slug: ecosport, name: EcoSport, aliases: [ecosport], segment: SUV-B, body: suv,
+         generations: [{id: ecosport-2, name: "EcoSport (2014–2022)", from: 2014, to: 2022}]}
+      - {slug: kuga, name: Kuga, aliases: [kuga], segment: SUV-C, body: suv,
+         generations: [{id: kuga-2, name: "Kuga II (2012–2019)", from: 2013, to: 2019},
+                       {id: kuga-3, name: "Kuga III (2019–heden)", from: 2020, to: null}]}
+      - {slug: mondeo, name: Mondeo, aliases: [mondeo, "mondeo wagon"], segment: D, body: stationwagen,
+         generations: [{id: mondeo-5, name: "Mondeo V (2014–2022)", from: 2015, to: 2022}]}
+      - {slug: mustang-mach-e, name: Mustang Mach-E, aliases: ["mustang mach-e", "mach-e", "mach e"], segment: SUV-D, body: suv, fuel: elektrisch,
+         generations: [{id: mach-e-1, name: "Mustang Mach-E (2021–heden)", from: 2021, to: null}]}
+
+  - slug: hyundai
+    name: Hyundai
+    aliases: [hyundai]
+    models:
+      - {slug: i10, name: i10, aliases: [i10], segment: A, body: hatchback,
+         generations: [{id: i10-2, name: "i10 II (2013–2019)", from: 2014, to: 2019},
+                       {id: i10-3, name: "i10 III (2020–heden)", from: 2020, to: null}]}
+      - {slug: i20, name: i20, aliases: [i20], segment: B, body: hatchback,
+         generations: [{id: i20-2, name: "i20 II (2014–2020)", from: 2015, to: 2020},
+                       {id: i20-3, name: "i20 III (2020–heden)", from: 2021, to: null}]}
+      - {slug: bayon, name: Bayon, aliases: [bayon], segment: SUV-B, body: suv,
+         generations: [{id: bayon-1, name: "Bayon (2021–heden)", from: 2021, to: null}]}
+      - {slug: i30, name: i30, aliases: [i30, "i30 wagon"], segment: C, body: hatchback,
+         hints: {"i30 wagon": {body: stationwagen}},
+         generations: [{id: i30-3, name: "i30 III (2017–heden)", from: 2017, to: null}]}
+      - {slug: kona, name: Kona, aliases: [kona, "kona electric", "kona ev"], segment: SUV-B, body: suv,
+         hints: {"kona electric": {fuel: elektrisch}, "kona ev": {fuel: elektrisch}},
+         generations: [{id: kona-1, name: "Kona I (2017–2023)", from: 2018, to: 2023},
+                       {id: kona-2, name: "Kona II (2023–heden)", from: 2023, to: null}]}
+      - {slug: ioniq, name: IONIQ, aliases: [ioniq], segment: C, body: hatchback,
+         generations: [{id: ioniq-1, name: "IONIQ (2016–2022)", from: 2016, to: 2022}]}
+      - {slug: ioniq-5, name: IONIQ 5, aliases: ["ioniq 5", "ioniq5"], segment: SUV-C, body: suv, fuel: elektrisch,
+         generations: [{id: ioniq-5-1, name: "IONIQ 5 (2021–heden)", from: 2021, to: null}]}
+      - {slug: ioniq-6, name: IONIQ 6, aliases: ["ioniq 6", "ioniq6"], segment: D, body: sedan, fuel: elektrisch,
+         generations: [{id: ioniq-6-1, name: "IONIQ 6 (2022–heden)", from: 2022, to: null}]}
+      - {slug: tucson, name: Tucson, aliases: [tucson], segment: SUV-C, body: suv,
+         generations: [{id: tucson-3, name: "Tucson III (2015–2020)", from: 2015, to: 2020},
+                       {id: tucson-4, name: "Tucson IV (2020–heden)", from: 2021, to: null}]}
+
+  - slug: skoda
+    name: Škoda
+    aliases: [skoda, škoda]
+    models:
+      - {slug: citigo, name: Citigo, aliases: [citigo, "citigo e iv", "citigo-e"], segment: A, body: hatchback,
+         generations: [{id: citigo-1, name: "Citigo (2012–2020)", from: 2012, to: 2020}]}
+      - {slug: fabia, name: Fabia, aliases: [fabia, "fabia combi"], segment: B, body: hatchback,
+         hints: {"fabia combi": {body: stationwagen}},
+         generations: [{id: fabia-3, name: "Fabia III (2014–2021)", from: 2015, to: 2021},
+                       {id: fabia-4, name: "Fabia IV (2021–heden)", from: 2022, to: null}]}
+      - {slug: kamiq, name: Kamiq, aliases: [kamiq], segment: SUV-B, body: suv,
+         generations: [{id: kamiq-1, name: "Kamiq (2019–heden)", from: 2019, to: null}]}
+      - {slug: scala, name: Scala, aliases: [scala], segment: C, body: hatchback,
+         generations: [{id: scala-1, name: "Scala (2019–heden)", from: 2019, to: null}]}
+      - {slug: octavia, name: Octavia, aliases: [octavia, "octavia combi"], segment: C, body: stationwagen,
+         hints: {"octavia combi": {body: stationwagen}},
+         generations: [{id: octavia-3, name: "Octavia III (2013–2020)", from: 2013, to: 2020},
+                       {id: octavia-4, name: "Octavia IV (2020–heden)", from: 2020, to: null}]}
+      - {slug: karoq, name: Karoq, aliases: [karoq], segment: SUV-C, body: suv,
+         generations: [{id: karoq-1, name: "Karoq (2017–heden)", from: 2018, to: null}]}
+      - {slug: kodiaq, name: Kodiaq, aliases: [kodiaq], segment: SUV-D, body: suv,
+         generations: [{id: kodiaq-1, name: "Kodiaq I (2016–2024)", from: 2017, to: 2024}]}
+      - {slug: superb, name: Superb, aliases: [superb, "superb combi"], segment: D, body: stationwagen,
+         generations: [{id: superb-3, name: "Superb III (2015–2024)", from: 2015, to: 2024}]}
+      - {slug: enyaq, name: Enyaq, aliases: [enyaq, "enyaq iv", "enyaq coupe"], segment: SUV-C, body: suv, fuel: elektrisch,
+         generations: [{id: enyaq-1, name: "Enyaq (2021–heden)", from: 2021, to: null}]}
+
+  - slug: bmw
+    name: BMW
+    aliases: [bmw]
+    models:
+      - {slug: 1-serie, name: 1-serie, aliases: ["1-serie", "1 serie", "1-series", "re:\\b1[1-4]\\d[ide]\\b", "re:\\bm1[34]\\d"], segment: C, body: hatchback,
+         generations: [{id: 1-serie-f20, name: "1-serie F20 (2011–2019)", from: 2012, to: 2019, keywords: [f20, f21]},
+                       {id: 1-serie-f40, name: "1-serie F40 (2019–2024)", from: 2020, to: 2024, keywords: [f40]}]}
+      - {slug: 2-serie-active-tourer, name: 2-serie Active Tourer, aliases: ["2-serie active tourer", "active tourer", "2 serie active tourer", "2-serie gran tourer"], segment: MPV, body: mpv,
+         generations: [{id: 2at-f45, name: "2-serie Active Tourer F45 (2014–2021)", from: 2014, to: 2021}]}
+      - {slug: 3-serie, name: 3-serie, aliases: ["3-serie", "3 serie", "3-series", "3 touring", "re:\\b3[1-4]\\d[ide]\\b", "re:\\b330e\\b"], segment: D, body: sedan,
+         hints: {"3 touring": {body: stationwagen}},
+         generations: [{id: 3-serie-f30, name: "3-serie F30/F31 (2012–2019)", from: 2012, to: 2019, keywords: [f30, f31]},
+                       {id: 3-serie-g20, name: "3-serie G20/G21 (2019–heden)", from: 2019, to: null, keywords: [g20, g21]}]}
+      - {slug: 5-serie, name: 5-serie, aliases: ["5-serie", "5 serie", "5-series", "re:\\b5[1-5]\\d[ide]\\b"], segment: E, body: sedan,
+         generations: [{id: 5-serie-f10, name: "5-serie F10/F11 (2010–2017)", from: 2010, to: 2017, keywords: [f10, f11]},
+                       {id: 5-serie-g30, name: "5-serie G30/G31 (2017–2023)", from: 2017, to: 2023, keywords: [g30, g31]}]}
+      - {slug: x1, name: X1, aliases: [x1], segment: SUV-C, body: suv,
+         generations: [{id: x1-f48, name: "X1 F48 (2015–2022)", from: 2015, to: 2022, keywords: [f48]},
+                       {id: x1-u11, name: "X1 U11 (2022–heden)", from: 2023, to: null, keywords: [u11]}]}
+      - {slug: x3, name: X3, aliases: [x3], segment: SUV-D, body: suv,
+         generations: [{id: x3-g01, name: "X3 G01 (2017–2024)", from: 2018, to: 2024, keywords: [g01]}]}
+      - {slug: i3, name: i3, aliases: [i3, "i3s"], segment: B, body: hatchback, fuel: elektrisch,
+         generations: [{id: i3-1, name: "i3 (2013–2022)", from: 2013, to: 2022}]}
+      - {slug: i4, name: i4, aliases: [i4], segment: D, body: sedan, fuel: elektrisch,
+         generations: [{id: i4-1, name: "i4 (2021–heden)", from: 2021, to: null}]}
+      - {slug: ix3, name: iX3, aliases: [ix3], segment: SUV-D, body: suv, fuel: elektrisch,
+         generations: [{id: ix3-1, name: "iX3 G08 (2020–2025)", from: 2021, to: 2025}]}
+
+  - slug: audi
+    name: Audi
+    aliases: [audi]
+    models:
+      - {slug: a1, name: A1, aliases: [a1, "a1 sportback"], segment: B, body: hatchback,
+         generations: [{id: a1-8x, name: "A1 8X (2010–2018)", from: 2010, to: 2018},
+                       {id: a1-gb, name: "A1 GB (2018–heden)", from: 2019, to: null}]}
+      - {slug: a3, name: A3, aliases: [a3, "a3 sportback", "a3 limousine"], segment: C, body: hatchback,
+         generations: [{id: a3-8v, name: "A3 8V (2012–2020)", from: 2013, to: 2020, keywords: [8v]},
+                       {id: a3-8y, name: "A3 8Y (2020–heden)", from: 2020, to: null, keywords: [8y]}]}
+      - {slug: a4, name: A4, aliases: [a4, "a4 avant"], segment: D, body: sedan,
+         hints: {"a4 avant": {body: stationwagen}},
+         generations: [{id: a4-b9, name: "A4 B9 (2015–2024)", from: 2016, to: 2024, keywords: [b9]}]}
+      - {slug: a6, name: A6, aliases: [a6, "a6 avant"], segment: E, body: sedan,
+         hints: {"a6 avant": {body: stationwagen}},
+         generations: [{id: a6-c7, name: "A6 C7 (2011–2018)", from: 2011, to: 2018, keywords: [c7]},
+                       {id: a6-c8, name: "A6 C8 (2018–heden)", from: 2018, to: null, keywords: [c8]}]}
+      - {slug: q2, name: Q2, aliases: [q2], segment: SUV-B, body: suv,
+         generations: [{id: q2-1, name: "Q2 (2016–heden)", from: 2016, to: null}]}
+      - {slug: q3, name: Q3, aliases: [q3, "q3 sportback"], segment: SUV-C, body: suv,
+         generations: [{id: q3-f3, name: "Q3 F3 (2018–heden)", from: 2019, to: null}]}
+      - {slug: q5, name: Q5, aliases: [q5], segment: SUV-D, body: suv,
+         generations: [{id: q5-fy, name: "Q5 FY (2016–2024)", from: 2017, to: 2024}]}
+      - {slug: q4-e-tron, name: Q4 e-tron, aliases: ["q4 e-tron", "q4 etron", "q4"], segment: SUV-C, body: suv, fuel: elektrisch,
+         generations: [{id: q4-1, name: "Q4 e-tron (2021–heden)", from: 2021, to: null}]}
+      - {slug: e-tron, name: e-tron / Q8 e-tron, aliases: ["e-tron", "q8 e-tron", etron], segment: SUV-E, body: suv, fuel: elektrisch,
+         generations: [{id: e-tron-1, name: "e-tron (2019–2025)", from: 2019, to: 2025}]}
+
+  - slug: mercedes-benz
+    name: Mercedes-Benz
+    aliases: [mercedes-benz, mercedes, "mercedes benz", mb]
+    models:
+      - {slug: a-klasse, name: A-Klasse, aliases: ["a-klasse", "a klasse", "a-class", "re:\\ba ?1[468]0\\b", "re:\\ba ?2[05]0\\b"], segment: C, body: hatchback,
+         generations: [{id: a-w176, name: "A-Klasse W176 (2012–2018)", from: 2012, to: 2018, keywords: [w176]},
+                       {id: a-w177, name: "A-Klasse W177 (2018–heden)", from: 2018, to: null, keywords: [w177]}]}
+      - {slug: b-klasse, name: B-Klasse, aliases: ["b-klasse", "b klasse", "b-class"], segment: MPV, body: mpv,
+         generations: [{id: b-w246, name: "B-Klasse W246 (2011–2018)", from: 2012, to: 2018},
+                       {id: b-w247, name: "B-Klasse W247 (2019–heden)", from: 2019, to: null}]}
+      - {slug: c-klasse, name: C-Klasse, aliases: ["c-klasse", "c klasse", "c-class", "c estate", "re:\\bc ?[1-4][0-9]0\\b"], segment: D, body: sedan,
+         hints: {"c estate": {body: stationwagen}},
+         generations: [{id: c-w205, name: "C-Klasse W205 (2014–2021)", from: 2014, to: 2021, keywords: [w205, s205]},
+                       {id: c-w206, name: "C-Klasse W206 (2021–heden)", from: 2021, to: null, keywords: [w206, s206]}]}
+      - {slug: e-klasse, name: E-Klasse, aliases: ["e-klasse", "e klasse", "e-class"], segment: E, body: sedan,
+         generations: [{id: e-w213, name: "E-Klasse W213 (2016–2023)", from: 2016, to: 2023}]}
+      - {slug: cla, name: CLA, aliases: [cla, "cla shooting brake"], segment: C, body: sedan,
+         generations: [{id: cla-c117, name: "CLA C117 (2013–2019)", from: 2013, to: 2019},
+                       {id: cla-c118, name: "CLA C118 (2019–heden)", from: 2019, to: null}]}
+      - {slug: gla, name: GLA, aliases: [gla], segment: SUV-C, body: suv,
+         generations: [{id: gla-x156, name: "GLA X156 (2014–2020)", from: 2014, to: 2020},
+                       {id: gla-h247, name: "GLA H247 (2020–heden)", from: 2020, to: null}]}
+      - {slug: glc, name: GLC, aliases: [glc, "glc coupe"], segment: SUV-D, body: suv,
+         generations: [{id: glc-x253, name: "GLC X253 (2015–2022)", from: 2016, to: 2022},
+                       {id: glc-x254, name: "GLC X254 (2022–heden)", from: 2023, to: null}]}
+      - {slug: eqa, name: EQA, aliases: [eqa], segment: SUV-C, body: suv, fuel: elektrisch,
+         generations: [{id: eqa-1, name: "EQA (2021–heden)", from: 2021, to: null}]}
+
+  - slug: volvo
+    name: Volvo
+    aliases: [volvo]
+    models:
+      - {slug: v40, name: V40, aliases: [v40, "v40 cross country"], segment: C, body: hatchback,
+         generations: [{id: v40-2, name: "V40 (2012–2019)", from: 2012, to: 2019}]}
+      - {slug: xc40, name: XC40, aliases: [xc40, "xc40 recharge", ex40], segment: SUV-C, body: suv,
+         generations: [{id: xc40-1, name: "XC40 (2017–heden)", from: 2018, to: null}]}
+      - {slug: v60, name: V60, aliases: [v60, "v60 cross country"], segment: D, body: stationwagen,
+         generations: [{id: v60-1, name: "V60 I (2010–2018)", from: 2011, to: 2018},
+                       {id: v60-2, name: "V60 II (2018–heden)", from: 2018, to: null}]}
+      - {slug: xc60, name: XC60, aliases: [xc60], segment: SUV-D, body: suv,
+         generations: [{id: xc60-1, name: "XC60 I (2008–2017)", from: 2008, to: 2017},
+                       {id: xc60-2, name: "XC60 II (2017–heden)", from: 2017, to: null}]}
+      - {slug: xc90, name: XC90, aliases: [xc90], segment: SUV-E, body: suv,
+         generations: [{id: xc90-2, name: "XC90 II (2014–heden)", from: 2015, to: null}]}
+      - {slug: v90, name: V90, aliases: [v90, "v90 cross country"], segment: E, body: stationwagen,
+         generations: [{id: v90-1, name: "V90 (2016–heden)", from: 2016, to: null}]}
+      - {slug: ex30, name: EX30, aliases: [ex30], segment: SUV-B, body: suv, fuel: elektrisch,
+         generations: [{id: ex30-1, name: "EX30 (2024–heden)", from: 2024, to: null}]}
+
+  - slug: citroen
+    name: Citroën
+    aliases: [citroen, citroën]
+    models:
+      - {slug: c1, name: C1, aliases: [c1], segment: A, body: hatchback,
+         generations: [{id: c1-2, name: "C1 II (2014–2022)", from: 2014, to: 2022}]}
+      - {slug: c3, name: C3, aliases: [c3, "e-c3"], segment: B, body: hatchback,
+         generations: [{id: c3-3, name: "C3 III (2016–2024)", from: 2017, to: 2024},
+                       {id: c3-4, name: "C3 IV (2024–heden)", from: 2024, to: null}]}
+      - {slug: c3-aircross, name: C3 Aircross, aliases: ["c3 aircross"], segment: SUV-B, body: suv,
+         generations: [{id: c3-aircross-1, name: "C3 Aircross (2017–2024)", from: 2017, to: 2024}]}
+      - {slug: c4, name: C4, aliases: [c4, "e-c4", "c4 x"], segment: C, body: hatchback,
+         hints: {"e-c4": {fuel: elektrisch}},
+         generations: [{id: c4-3, name: "C4 III (2020–heden)", from: 2021, to: null}]}
+      - {slug: c4-cactus, name: C4 Cactus, aliases: ["c4 cactus"], segment: C, body: hatchback,
+         generations: [{id: c4-cactus-1, name: "C4 Cactus (2014–2020)", from: 2014, to: 2020}]}
+      - {slug: c5-aircross, name: C5 Aircross, aliases: ["c5 aircross"], segment: SUV-C, body: suv,
+         generations: [{id: c5-aircross-1, name: "C5 Aircross (2018–heden)", from: 2019, to: null}]}
+      - {slug: berlingo, name: Berlingo, aliases: [berlingo, "e-berlingo"], segment: MPV, body: mpv,
+         generations: [{id: berlingo-3, name: "Berlingo III (2018–heden)", from: 2018, to: null}]}
+
+  - slug: fiat
+    name: Fiat
+    aliases: [fiat]
+    models:
+      - {slug: "500", name: "500", aliases: ["500", "500c"], segment: A, body: hatchback,
+         generations: [{id: 500-312, name: "500 (2007–2024)", from: 2008, to: 2024}]}
+      - {slug: 500e, name: 500e, aliases: ["500e", "500 e", "500 electric", "new 500"], segment: A, body: hatchback, fuel: elektrisch,
+         generations: [{id: 500e-332, name: "500e (2020–heden)", from: 2020, to: null}]}
+      - {slug: panda, name: Panda, aliases: [panda], segment: A, body: hatchback,
+         generations: [{id: panda-3, name: "Panda III (2012–heden)", from: 2012, to: null}]}
+      - {slug: tipo, name: Tipo, aliases: [tipo], segment: C, body: hatchback,
+         generations: [{id: tipo-2, name: "Tipo (2015–heden)", from: 2016, to: null}]}
+      - {slug: 500x, name: 500X, aliases: ["500x"], segment: SUV-B, body: suv,
+         generations: [{id: 500x-1, name: "500X (2014–heden)", from: 2015, to: null}]}
+
+  - slug: tesla
+    name: Tesla
+    aliases: [tesla]
+    models:
+      - {slug: model-3, name: Model 3, aliases: ["model 3", "model3", "m3"], segment: D, body: sedan, fuel: elektrisch,
+         generations: [{id: model-3-1, name: "Model 3 (2019–2023)", from: 2019, to: 2023},
+                       {id: model-3-2, name: "Model 3 Highland (2023–heden)", from: 2024, to: null, keywords: [highland]}]}
+      - {slug: model-y, name: Model Y, aliases: ["model y", "modely"], segment: SUV-D, body: suv, fuel: elektrisch,
+         generations: [{id: model-y-1, name: "Model Y (2021–2025)", from: 2021, to: 2025},
+                       {id: model-y-2, name: "Model Y Juniper (2025–heden)", from: 2025, to: null, keywords: [juniper]}]}
+      - {slug: model-s, name: Model S, aliases: ["model s", "models"], segment: LUX, body: sedan, fuel: elektrisch,
+         generations: [{id: model-s-1, name: "Model S (2012–2021)", from: 2013, to: 2021}]}
+      - {slug: model-x, name: Model X, aliases: ["model x", "modelx"], segment: LUX, body: suv, fuel: elektrisch,
+         generations: [{id: model-x-1, name: "Model X (2016–2021)", from: 2016, to: 2021}]}
+
+  - slug: seat
+    name: SEAT
+    aliases: [seat]
+    models:
+      - {slug: mii, name: Mii, aliases: [mii, "mii electric"], segment: A, body: hatchback,
+         hints: {"mii electric": {fuel: elektrisch}},
+         generations: [{id: mii-1, name: "Mii (2011–2021)", from: 2012, to: 2021}]}
+      - {slug: ibiza, name: Ibiza, aliases: [ibiza], segment: B, body: hatchback,
+         generations: [{id: ibiza-4, name: "Ibiza 6J (2008–2017)", from: 2008, to: 2017},
+                       {id: ibiza-5, name: "Ibiza KJ (2017–heden)", from: 2017, to: null}]}
+      - {slug: arona, name: Arona, aliases: [arona], segment: SUV-B, body: suv,
+         generations: [{id: arona-1, name: "Arona (2017–heden)", from: 2017, to: null}]}
+      - {slug: leon, name: Leon, aliases: [leon, león, "leon st", "leon sportstourer"], segment: C, body: hatchback,
+         hints: {"leon st": {body: stationwagen}, "leon sportstourer": {body: stationwagen}},
+         generations: [{id: leon-3, name: "Leon III (2012–2020)", from: 2013, to: 2020},
+                       {id: leon-4, name: "Leon IV (2020–heden)", from: 2020, to: null}]}
+      - {slug: ateca, name: Ateca, aliases: [ateca], segment: SUV-C, body: suv,
+         generations: [{id: ateca-1, name: "Ateca (2016–heden)", from: 2016, to: null}]}
+
+  - slug: cupra
+    name: CUPRA
+    aliases: [cupra]
+    models:
+      - {slug: born, name: Born, aliases: [born], segment: C, body: hatchback, fuel: elektrisch,
+         generations: [{id: born-1, name: "Born (2021–heden)", from: 2021, to: null}]}
+      - {slug: formentor, name: Formentor, aliases: [formentor], segment: SUV-C, body: suv,
+         generations: [{id: formentor-1, name: "Formentor (2020–heden)", from: 2020, to: null}]}
+
+  - slug: nissan
+    name: Nissan
+    aliases: [nissan]
+    models:
+      - {slug: micra, name: Micra, aliases: [micra], segment: B, body: hatchback,
+         generations: [{id: micra-k14, name: "Micra K14 (2017–2023)", from: 2017, to: 2023}]}
+      - {slug: juke, name: Juke, aliases: [juke], segment: SUV-B, body: suv,
+         generations: [{id: juke-f15, name: "Juke F15 (2010–2019)", from: 2010, to: 2019},
+                       {id: juke-f16, name: "Juke F16 (2019–heden)", from: 2020, to: null}]}
+      - {slug: qashqai, name: Qashqai, aliases: [qashqai], segment: SUV-C, body: suv,
+         generations: [{id: qashqai-j11, name: "Qashqai J11 (2013–2021)", from: 2014, to: 2021},
+                       {id: qashqai-j12, name: "Qashqai J12 (2021–heden)", from: 2021, to: null}]}
+      - {slug: leaf, name: Leaf, aliases: [leaf], segment: C, body: hatchback, fuel: elektrisch,
+         generations: [{id: leaf-ze0, name: "Leaf ZE0/AZE0 (2011–2017)", from: 2011, to: 2017},
+                       {id: leaf-ze1, name: "Leaf ZE1 (2018–2024)", from: 2018, to: 2024}]}
+      - {slug: x-trail, name: X-Trail, aliases: [x-trail, xtrail], segment: SUV-D, body: suv,
+         generations: [{id: x-trail-3, name: "X-Trail T32 (2014–2022)", from: 2014, to: 2022}]}
+
+  - slug: mazda
+    name: Mazda
+    aliases: [mazda]
+    models:
+      - {slug: "2", name: Mazda2, aliases: ["mazda2", "mazda 2", "2"], segment: B, body: hatchback,
+         generations: [{id: mazda2-dj, name: "Mazda2 DJ (2014–heden)", from: 2015, to: null}]}
+      - {slug: "3", name: Mazda3, aliases: ["mazda3", "mazda 3", "3"], segment: C, body: hatchback,
+         generations: [{id: mazda3-bm, name: "Mazda3 BM (2013–2019)", from: 2013, to: 2019},
+                       {id: mazda3-bp, name: "Mazda3 BP (2019–heden)", from: 2019, to: null}]}
+      - {slug: cx-3, name: CX-3, aliases: [cx-3, cx3], segment: SUV-B, body: suv,
+         generations: [{id: cx-3-1, name: "CX-3 (2015–2022)", from: 2015, to: 2022}]}
+      - {slug: cx-30, name: CX-30, aliases: [cx-30, cx30], segment: SUV-C, body: suv,
+         generations: [{id: cx-30-1, name: "CX-30 (2019–heden)", from: 2019, to: null}]}
+      - {slug: cx-5, name: CX-5, aliases: [cx-5, cx5], segment: SUV-C, body: suv,
+         generations: [{id: cx-5-kf, name: "CX-5 KF (2017–heden)", from: 2017, to: null}]}
+      - {slug: mx-5, name: MX-5, aliases: [mx-5, mx5], segment: SPORT, body: cabrio,
+         generations: [{id: mx-5-nd, name: "MX-5 ND (2015–heden)", from: 2015, to: null}]}
+      - {slug: mx-30, name: MX-30, aliases: [mx-30, mx30], segment: SUV-C, body: suv, fuel: elektrisch,
+         generations: [{id: mx-30-1, name: "MX-30 (2020–heden)", from: 2020, to: null}]}
+
+  - slug: suzuki
+    name: Suzuki
+    aliases: [suzuki]
+    models:
+      - {slug: swift, name: Swift, aliases: [swift], segment: B, body: hatchback,
+         generations: [{id: swift-6, name: "Swift (2017–2024)", from: 2017, to: 2024}]}
+      - {slug: ignis, name: Ignis, aliases: [ignis], segment: A, body: hatchback,
+         generations: [{id: ignis-3, name: "Ignis (2016–heden)", from: 2017, to: null}]}
+      - {slug: vitara, name: Vitara, aliases: [vitara], segment: SUV-B, body: suv,
+         generations: [{id: vitara-4, name: "Vitara (2015–heden)", from: 2015, to: null}]}
+      - {slug: s-cross, name: S-Cross, aliases: [s-cross, "sx4 s-cross"], segment: SUV-C, body: suv,
+         generations: [{id: s-cross-1, name: "S-Cross (2013–heden)", from: 2013, to: null}]}
+
+  - slug: dacia
+    name: Dacia
+    aliases: [dacia]
+    models:
+      - {slug: sandero, name: Sandero, aliases: [sandero, "sandero stepway"], segment: B, body: hatchback,
+         generations: [{id: sandero-2, name: "Sandero II (2012–2020)", from: 2013, to: 2020},
+                       {id: sandero-3, name: "Sandero III (2020–heden)", from: 2021, to: null}]}
+      - {slug: duster, name: Duster, aliases: [duster], segment: SUV-C, body: suv,
+         generations: [{id: duster-2, name: "Duster II (2017–2024)", from: 2018, to: 2024}]}
+      - {slug: jogger, name: Jogger, aliases: [jogger], segment: MPV, body: stationwagen,
+         generations: [{id: jogger-1, name: "Jogger (2022–heden)", from: 2022, to: null}]}
+      - {slug: spring, name: Spring, aliases: [spring], segment: A, body: hatchback, fuel: elektrisch,
+         generations: [{id: spring-1, name: "Spring (2021–heden)", from: 2021, to: null}]}
+
+  - slug: mini
+    name: MINI
+    aliases: [mini]
+    models:
+      - {slug: mini, name: Mini, aliases: [cooper, "cooper s", one, "cooper se", "mini electric", "3-deurs", "5-deurs", mini], segment: B, body: hatchback,
+         hints: {"cooper se": {fuel: elektrisch}, "mini electric": {fuel: elektrisch}},
+         generations: [{id: mini-f56, name: "Mini F55/F56 (2014–2024)", from: 2014, to: 2024, keywords: [f55, f56]}]}
+      - {slug: countryman, name: Countryman, aliases: [countryman], segment: SUV-C, body: suv,
+         generations: [{id: countryman-f60, name: "Countryman F60 (2017–2023)", from: 2017, to: 2023}]}
+
+  - slug: mg
+    name: MG
+    aliases: [mg]
+    models:
+      - {slug: zs, name: ZS, aliases: [zs, "zs ev"], segment: SUV-B, body: suv,
+         hints: {"zs ev": {fuel: elektrisch}},
+         generations: [{id: zs-1, name: "ZS (2019–heden)", from: 2019, to: null}]}
+      - {slug: mg4, name: MG4, aliases: [mg4, "mg 4", "4 electric"], segment: C, body: hatchback, fuel: elektrisch,
+         generations: [{id: mg4-1, name: "MG4 (2022–heden)", from: 2022, to: null}]}
+      - {slug: ehs, name: EHS, aliases: [ehs], segment: SUV-C, body: suv, fuel: plugin_hybride,
+         generations: [{id: ehs-1, name: "EHS (2020–heden)", from: 2020, to: null}]}
+      - {slug: mg5, name: MG5, aliases: [mg5, "mg 5"], segment: C, body: stationwagen, fuel: elektrisch,
+         generations: [{id: mg5-1, name: "MG5 (2020–heden)", from: 2020, to: null}]}
+
+  - slug: mitsubishi
+    name: Mitsubishi
+    aliases: [mitsubishi]
+    models:
+      - {slug: space-star, name: Space Star, aliases: ["space star", spacestar], segment: A, body: hatchback,
+         generations: [{id: space-star-1, name: "Space Star (2013–heden)", from: 2013, to: null}]}
+      - {slug: outlander, name: Outlander, aliases: [outlander, "outlander phev"], segment: SUV-D, body: suv,
+         hints: {"outlander phev": {fuel: plugin_hybride}},
+         generations: [{id: outlander-3, name: "Outlander III (2012–2021)", from: 2013, to: 2021}]}
+      - {slug: eclipse-cross, name: Eclipse Cross, aliases: ["eclipse cross"], segment: SUV-C, body: suv,
+         generations: [{id: eclipse-cross-1, name: "Eclipse Cross (2017–heden)", from: 2018, to: null}]}
+
+  - slug: honda
+    name: Honda
+    aliases: [honda]
+    models:
+      - {slug: jazz, name: Jazz, aliases: [jazz], segment: B, body: hatchback,
+         generations: [{id: jazz-3, name: "Jazz III (2015–2020)", from: 2015, to: 2020},
+                       {id: jazz-4, name: "Jazz IV e:HEV (2020–heden)", from: 2020, to: null}]}
+      - {slug: civic, name: Civic, aliases: [civic], segment: C, body: hatchback,
+         generations: [{id: civic-10, name: "Civic X (2017–2021)", from: 2017, to: 2021},
+                       {id: civic-11, name: "Civic XI (2022–heden)", from: 2022, to: null}]}
+      - {slug: cr-v, name: CR-V, aliases: [cr-v, crv], segment: SUV-D, body: suv,
+         generations: [{id: cr-v-5, name: "CR-V V (2018–2023)", from: 2018, to: 2023}]}
+      - {slug: hr-v, name: HR-V, aliases: [hr-v, hrv], segment: SUV-B, body: suv,
+         generations: [{id: hr-v-3, name: "HR-V e:HEV (2021–heden)", from: 2021, to: null}]}
+
+  - slug: polestar
+    name: Polestar
+    aliases: [polestar]
+    models:
+      - {slug: "2", name: Polestar 2, aliases: ["polestar 2", "2"], segment: D, body: hatchback, fuel: elektrisch,
+         generations: [{id: polestar-2-1, name: "Polestar 2 (2020–heden)", from: 2020, to: null}]}
+
+  - slug: lynk-co
+    name: Lynk & Co
+    aliases: ["lynk & co", "lynk&co", "lynk co", lynk]
+    models:
+      - {slug: "01", name: "01", aliases: ["01"], segment: SUV-C, body: suv, fuel: plugin_hybride,
+         generations: [{id: lynk-01-1, name: "01 (2021–heden)", from: 2021, to: null}]}
+
+  - slug: byd
+    name: BYD
+    aliases: [byd]
+    models:
+      - {slug: atto-3, name: Atto 3, aliases: ["atto 3", atto3], segment: SUV-C, body: suv, fuel: elektrisch,
+         generations: [{id: atto-3-1, name: "Atto 3 (2022–heden)", from: 2022, to: null}]}
+      - {slug: dolphin, name: Dolphin, aliases: [dolphin], segment: C, body: hatchback, fuel: elektrisch,
+         generations: [{id: dolphin-1, name: "Dolphin (2023–heden)", from: 2023, to: null}]}
+      - {slug: seal, name: Seal, aliases: [seal], segment: D, body: sedan, fuel: elektrisch,
+         generations: [{id: seal-1, name: "Seal (2023–heden)", from: 2023, to: null}]}
+
+  - slug: jeep
+    name: Jeep
+    aliases: [jeep]
+    models:
+      - {slug: renegade, name: Renegade, aliases: [renegade], segment: SUV-B, body: suv,
+         generations: [{id: renegade-1, name: "Renegade (2014–heden)", from: 2015, to: null}]}
+      - {slug: compass, name: Compass, aliases: [compass], segment: SUV-C, body: suv,
+         generations: [{id: compass-2, name: "Compass II (2017–heden)", from: 2017, to: null}]}
+
+  - slug: land-rover
+    name: Land Rover
+    aliases: ["land rover", landrover, "range rover"]
+    models:
+      - {slug: range-rover-evoque, name: Range Rover Evoque, aliases: [evoque, "range rover evoque"], segment: SUV-C, body: suv,
+         generations: [{id: evoque-2, name: "Evoque II (2019–heden)", from: 2019, to: null}]}
+      - {slug: discovery-sport, name: Discovery Sport, aliases: ["discovery sport"], segment: SUV-D, body: suv,
+         generations: [{id: discovery-sport-1, name: "Discovery Sport (2014–heden)", from: 2015, to: null}]}
+
+  - slug: porsche
+    name: Porsche
+    aliases: [porsche]
+    models:
+      - {slug: macan, name: Macan, aliases: [macan], segment: SUV-D, body: suv,
+         generations: [{id: macan-1, name: "Macan (2014–2024)", from: 2014, to: 2024}]}
+      - {slug: taycan, name: Taycan, aliases: [taycan], segment: LUX, body: sedan, fuel: elektrisch,
+         generations: [{id: taycan-1, name: "Taycan (2019–heden)", from: 2020, to: null}]}
+      - {slug: cayenne, name: Cayenne, aliases: [cayenne], segment: SUV-E, body: suv,
+         generations: [{id: cayenne-3, name: "Cayenne III (2017–heden)", from: 2018, to: null}]}
+
+  - slug: smart
+    name: smart
+    aliases: [smart]
+    models:
+      - {slug: fortwo, name: fortwo, aliases: [fortwo, "for two", "eq fortwo"], segment: A, body: hatchback,
+         generations: [{id: fortwo-453, name: "fortwo 453 (2014–2024)", from: 2015, to: 2024}]}
+      - {slug: forfour, name: forfour, aliases: [forfour, "for four", "eq forfour"], segment: A, body: hatchback,
+         generations: [{id: forfour-453, name: "forfour 453 (2014–2021)", from: 2015, to: 2021}]}
+      - {slug: "1", name: "#1", aliases: ["#1", "smart #1"], segment: SUV-B, body: suv, fuel: elektrisch,
+         generations: [{id: smart-1-1, name: "#1 (2022–heden)", from: 2023, to: null}]}
+
+  - slug: ds
+    name: DS
+    aliases: [ds, "ds automobiles"]
+    models:
+      - {slug: ds-3, name: DS 3 (Crossback), aliases: ["ds 3", ds3, "ds 3 crossback"], segment: SUV-B, body: suv,
+         generations: [{id: ds-3-1, name: "DS 3 Crossback (2019–heden)", from: 2019, to: null}]}
+      - {slug: ds-7, name: DS 7, aliases: ["ds 7", ds7, "ds 7 crossback"], segment: SUV-D, body: suv,
+         generations: [{id: ds-7-1, name: "DS 7 (2018–heden)", from: 2018, to: null}]}
+
+  - slug: lexus
+    name: Lexus
+    aliases: [lexus]
+    models:
+      - {slug: ct, name: CT, aliases: [ct, "ct 200h", ct200h], segment: C, body: hatchback, fuel: hybride,
+         generations: [{id: ct-1, name: "CT 200h (2011–2022)", from: 2011, to: 2022}]}
+      - {slug: ux, name: UX, aliases: [ux, "ux 250h"], segment: SUV-C, body: suv,
+         generations: [{id: ux-1, name: "UX (2019–heden)", from: 2019, to: null}]}
+      - {slug: nx, name: NX, aliases: [nx, "nx 300h"], segment: SUV-D, body: suv,
+         generations: [{id: nx-1, name: "NX I (2014–2021)", from: 2015, to: 2021},
+                       {id: nx-2, name: "NX II (2021–heden)", from: 2022, to: null}]}
