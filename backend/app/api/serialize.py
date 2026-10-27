@@ -6,6 +6,7 @@ from app.models import Listing, Vehicle
 from app.normalize.fields import BODY_LABELS, FUEL_LABELS, OPTION_LABELS
 from app.normalize.kenteken import format_plate
 from app.normalize.taxonomy import generation_name, get_model, load_taxonomy
+from app.scoring.components import composite
 from app.search import Scored
 from app.util import utcnow
 
@@ -38,6 +39,8 @@ def card(listing: Listing, vehicle: Vehicle | None = None, distance_km: float | 
     prices = listing.prices or []
     first_price = prices[0].price_eur if prices else listing.price_eur
     comps = listing.score_components or {}
+    if match is None and comps:
+        match = composite(comps, None, distance_km)
     out = {
         "id": listing.id,
         "title": listing.title,

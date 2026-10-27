@@ -60,8 +60,9 @@ def advise(listing: Listing, vehicle: Vehicle | None, issue_matches: list, compa
         args.append("Geen garantie vermeld: vraag om (BOVAG-)garantie of een lagere prijs.")
 
     leverage = min(leverage, 0.15)
-    opening = int(round(min(price, market) * (1 - leverage) - repair * 0.5, -1))
-    walk_away = int(round(min(price, max(low, market * 1.02) - repair), -1))
+    # floor to tens so the suggestions never end up above the asking price through rounding
+    opening = int(min(price, market) * (1 - leverage) - repair * 0.5) // 10 * 10
+    walk_away = int(min(price, max(low, market * 1.02) - repair)) // 10 * 10
     opening = min(opening, walk_away)
     return {
         "asking": price,

@@ -1,0 +1,15 @@
+services:
+  autozoeker:
+    build: .
+    image: autozoeker:latest
+    container_name: autozoeker
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      TZ: Europe/Amsterdam
+    volumes:
+      - ./data:/data
