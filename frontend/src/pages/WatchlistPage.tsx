@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import { ClipboardCheck, Heart, StickyNote, Trash2, TrendingDown } from "lucide-react";
+import { ClipboardCheck, Heart, Link2, StickyNote, Trash2, TrendingDown } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CarImage, DealBadge } from "../components/car";
-import { Badge, Empty, ErrorBox, Spinner } from "../components/ui";
+import { Badge, Button, Empty, ErrorBox, Spinner } from "../components/ui";
 import { api } from "../lib/api";
 import { euro, km } from "../lib/format";
 import { useApp } from "../lib/store";
@@ -81,6 +81,48 @@ function WatchCard({ item, onMove, onDelete, onNotes }: { item: WatchItem; onMov
   );
 }
 
+function ImportForm() {
+  const qc = useQueryClient();
+  const navigate = useNavigate();
+  const { profileId } = useApp();
+  const [url, setUrl] = useState("");
+  const imp = useMutation({
+    mutationFn: async () => {
+      const { id } = await api.importUrl(url.trim());
+      await api.addWatch(id, profileId);
+      return id;
+    },
+    onSuccess: (id) => {
+      qc.invalidateQueries({ queryKey: ["watchlist"] });
+      navigate(`/auto/${id}`);
+    },
+  });
+  return (
+    <form
+      className="space-y-1"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (url.trim()) imp.mutate();
+      }}
+    >
+      <div className="flex gap-2">
+        <input
+          type="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Plak een AutoScout24- of Marktplaats-link"
+          aria-label="Advertentie-link"
+          className="w-full min-w-0 rounded-lg border border-slate-300 px-3 py-1.5 text-sm sm:w-96"
+        />
+        <Button type="submit" size="sm" variant="secondary" disabled={imp.isPending}>
+          <Link2 className="h-4 w-4" /> {imp.isPending ? "Ophalen…" : "Toevoegen"}
+        </Button>
+      </div>
+      {imp.error && <ErrorBox error={imp.error} />}
+    </form>
+  );
+}
+
 export default function WatchlistPage() {
   const qc = useQueryClient();
   const q = useQuery({ queryKey: ["watchlist"], queryFn: api.watchlist });
@@ -95,17 +137,23 @@ export default function WatchlistPage() {
   if (q.error || !q.data) return <ErrorBox error={q.error} />;
   if (q.data.items.length === 0) {
     return (
+      <div className="space-y-4">
+      <ImportForm />
       <Empty title="Nog geen favorieten" icon={<Heart className="h-8 w-8 text-rose-400" />}>
         Klik op het hartje bij een auto. Hier volg je ze daarna van "interessant" tot "gekocht", met notities en de bezichtigingschecklist. Prijsdalingen en verkochte auto's krijg
         je als melding.
       </Empty>
+      </div>
     );
   }
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-xl font-bold">Favorieten</h1>
-        <p className="text-sm text-slate-600">Gedeeld tussen jullie profielen. Sleep kaarten tussen kolommen.</p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-bold">Favorieten</h1>
+          <p className="text-sm text-slate-600">Gedeeld tussen jullie profielen. Sleep kaarten tussen kolommen.</p>
+        </div>
+        <ImportForm />
       </div>
       <div className="flex gap-3 overflow-x-auto pb-4">
         {q.data.statuses.map((s) => {

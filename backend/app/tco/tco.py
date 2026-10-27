@@ -16,7 +16,7 @@ ENERGY_DEFAULTS = {
     "kwh_home": 0.28,
     "kwh_public": 0.55,
     "public_share": 0.3,
-    "peildatum": "CBS-gemiddelden juni/juli 2026; pas aan in Instellingen",
+    "peildatum": "CBS-gemiddelden juni/juli 2026; aan te passen onder 'Energieprijzen aanpassen'",
 }
 
 # Rough monthly maintenance (incl. tyres) by fuel; EVs need less.

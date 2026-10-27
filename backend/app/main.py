@@ -72,7 +72,8 @@ app = FastAPI(title="Autozoeker", version="0.1.0", lifespan=lifespan)
 @app.middleware("http")
 async def basic_auth(request: Request, call_next):
     settings = get_settings()
-    if settings.basic_auth_user and settings.basic_auth_password:
+    # /api/health stays open for the container healthcheck; it reveals nothing but readiness.
+    if settings.basic_auth_user and settings.basic_auth_password and request.url.path != "/api/health":
         header = request.headers.get("authorization", "")
         ok = False
         if header.lower().startswith("basic "):

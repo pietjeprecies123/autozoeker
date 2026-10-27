@@ -105,7 +105,7 @@ function Research({ make, model }: { make: string; model: string }) {
     return (
       <p className="text-sm text-slate-500">
         Voor dit model staat (nog) niets in de samengestelde kennisbank. Met een <code>ANTHROPIC_API_KEY</code> kan Autozoeker bekende problemen op internet laten
-        onderzoeken door Claude (eenmalig, ca. €0,25–0,35 per model).
+        onderzoeken door Claude (eenmalig, ca. €0,30–0,80 per model, geschat).
       </p>
     );
   }

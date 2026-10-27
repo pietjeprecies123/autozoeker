@@ -55,7 +55,7 @@ function ModelIssues({ make, model }: { make: string; model: string }) {
           <p className="text-slate-600">Voor dit model staat nog niets in de kennisbank.</p>
           {d.ai_available ? (
             <Button onClick={() => research.mutate(false)} disabled={research.isPending}>
-              <FileSearch className="h-4 w-4" /> {research.isPending ? "Claude zoekt bronnen (±1 min)…" : "Onderzoek met AI (≈ €0,25–0,35)"}
+              <FileSearch className="h-4 w-4" /> {research.isPending ? "Claude zoekt bronnen (±1 min)…" : "Onderzoek met AI (geschat €0,30–0,80)"}
             </Button>
           ) : (
             <p className="text-slate-500">Stel <code>ANTHROPIC_API_KEY</code> in om dit automatisch te laten onderzoeken.</p>

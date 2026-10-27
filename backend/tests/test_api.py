@@ -64,3 +64,16 @@ def test_parse_search_rules_and_ai_unavailable(seeded_engine):
     assert c.get("/api/issues/tesla/model-3").json()["overview"]["issues"]
     assert c.get("/api/status").json()["valuation"]["rows"] > 0
     assert c.get("/api/insights/toyota?model=yaris").json()["active"] > 0
+
+
+def test_basic_auth_keeps_health_open(seeded_engine, monkeypatch):
+    from app.config import get_settings
+
+    settings = get_settings()
+    monkeypatch.setattr(settings, "basic_auth_user", "pim")
+    monkeypatch.setattr(settings, "basic_auth_password", "geheim")
+    c = client(seeded_engine)
+    assert c.get("/api/health").status_code == 200
+    assert c.get("/api/meta").status_code == 401
+    assert c.get("/api/meta", auth=("pim", "fout")).status_code == 401
+    assert c.get("/api/meta", auth=("pim", "geheim")).status_code == 200

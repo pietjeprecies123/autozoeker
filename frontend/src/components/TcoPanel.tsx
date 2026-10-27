@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { api } from "../lib/api";
@@ -21,7 +21,25 @@ const COLOURS: Record<string, string> = {
   afschrijving: "bg-rose-500",
 };
 
-function Field({ label, value, onChange, step }: { label: string; value: number | ""; onChange: (v: number | "") => void; step?: number }) {
+const ENERGY_FIELDS = [
+  ["euro95_per_l", "Euro95 €/l"],
+  ["diesel_per_l", "Diesel €/l"],
+  ["lpg_per_l", "LPG €/l"],
+  ["kwh_home", "Thuisladen €/kWh"],
+  ["kwh_public", "Publiek laden €/kWh"],
+  ["public_share", "Deel publiek laden (0–1)"],
+] as const;
+type Energy = Partial<Record<(typeof ENERGY_FIELDS)[number][0], number>>;
+
+function loadEnergy(): Energy {
+  try {
+    return JSON.parse(localStorage.getItem("az.energy") || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function Field({ label, value, onChange, step, placeholder }: { label: string; value: number | ""; onChange: (v: number | "") => void; step?: number; placeholder?: string }) {
   return (
     <label className="block text-xs text-slate-500">
       {label}
@@ -29,6 +47,7 @@ function Field({ label, value, onChange, step }: { label: string; value: number 
         type="number"
         step={step}
         value={value}
+        placeholder={placeholder}
         onChange={(e) => onChange(e.target.value === "" ? "" : Number(e.target.value))}
         className="mt-1 w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm text-slate-900"
       />
@@ -42,13 +61,26 @@ export default function TcoPanel({ listingId }: { listingId: number }) {
   const [years, setYears] = useState<number | "">(3);
   const [insurance, setInsurance] = useState<number | "">("");
   const [mrb, setMrb] = useState<number | "">("");
+  const [energy, setEnergy] = useState<Energy>(loadEnergy);
+  const setEnergyField = (key: keyof Energy, v: number | "") => {
+    const next = { ...energy };
+    if (v === "") delete next[key];
+    else next[key] = v;
+    setEnergy(next);
+    try {
+      localStorage.setItem("az.energy", JSON.stringify(next));
+    } catch {
+      /* storage unavailable: keep it for this page only */
+    }
+  };
   const input = {
+    ...energy,
     km_per_year: kmYear || 13000,
     years: years || 3,
     insurance_month: insurance === "" ? null : insurance,
     mrb_quarter_override: mrb === "" ? null : mrb,
   };
-  const q = useQuery({ queryKey: ["tco", listingId, input, profileId], queryFn: () => api.tco(listingId, input, profileId) });
+  const q = useQuery({ queryKey: ["tco", listingId, input, profileId], queryFn: () => api.tco(listingId, input, profileId), placeholderData: keepPreviousData });
   const t = q.data;
   const total = t?.monthly.totaal ?? 0;
   return (
@@ -99,6 +131,16 @@ export default function TcoPanel({ listingId }: { listingId: number }) {
             </div>
             {t.notes.map((n) => <div key={n}>{n}</div>)}
           </div>
+          <details className="text-sm">
+            <summary className="cursor-pointer text-brand-700">Energieprijzen aanpassen</summary>
+            <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {ENERGY_FIELDS.map(([key, label]) => (
+                <Field key={key} label={label} step={0.01} value={energy[key] ?? ""} placeholder={String(t.inputs[key] ?? "")}
+                  onChange={(v) => setEnergyField(key, v)} />
+              ))}
+            </div>
+            <p className="mt-1 text-xs text-slate-500">Wordt in deze browser onthouden en geldt voor alle auto's.</p>
+          </details>
         </>
       )}
     </div>
