@@ -6,12 +6,13 @@ import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
+import httpx
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.enrich import geo
 from app.enrich.rdw import enrich as rdw_enrich
-from app.models import CrawlRun, Listing, PriceHistory
+from app.models import CrawlRun, Listing, PriceHistory, WatchlistItem
 from app.normalize import normalize_raw
 from app.sources.base import RawListing, SourceAdapter, SourceBlocked, SourceQuery
 from app.util import utcnow
@@ -33,6 +34,7 @@ class IngestResult:
     removed: list[int] = field(default_factory=list)
     unchanged: int = 0
     errors: list[str] = field(default_factory=list)
+    blocked: bool = False  # the source refused us (403/429/captcha)
 
     def merge(self, other: IngestResult) -> None:
         self.new += other.new
@@ -41,6 +43,7 @@ class IngestResult:
         self.removed += other.removed
         self.unchanged += other.unchanged
         self.errors += other.errors
+        self.blocked = self.blocked or other.blocked
 
     @property
     def touched(self) -> list[int]:
@@ -163,6 +166,7 @@ def crawl(session: Session, adapter: SourceAdapter, query: SourceQuery) -> Inges
     except SourceBlocked as exc:
         run.status = "blocked"
         run.error = str(exc)
+        result.blocked = True
     except Exception as exc:
         log.exception("crawl %s failed", adapter.name)
         run.status = "error"
@@ -177,21 +181,70 @@ def crawl(session: Session, adapter: SourceAdapter, query: SourceQuery) -> Inges
     return result
 
 
-def mark_stale(session: Session, sources: list[str], max_age_hours: int = 72) -> list[int]:
-    """Mark listings not seen for a while as removed (likely sold). Returns their ids."""
-    cutoff = utcnow() - timedelta(hours=max_age_hours)
-    stale = session.scalars(
-        select(Listing).where(
-            Listing.status == "active",
-            Listing.source.in_(sources),
-            Listing.last_seen_at < cutoff,
-        )
+BACKOFF_FIRST_MIN = 60
+BACKOFF_MAX_MIN = 24 * 60
+
+
+def blocked_until(session: Session, source: str) -> datetime | None:
+    """A source that refused us is paused: 1 hour after the first refusal, doubling up to 24 hours."""
+    runs = session.execute(
+        select(CrawlRun.status, CrawlRun.finished_at)
+        .where(CrawlRun.source == source)
+        .order_by(CrawlRun.id.desc())
+        .limit(6)
     ).all()
+    streak = 0
+    for status, _ in runs:
+        if status != "blocked":
+            break
+        streak += 1
+    if not streak or runs[0].finished_at is None:
+        return None
+    until = runs[0].finished_at + timedelta(minutes=min(BACKOFF_FIRST_MIN * 2 ** (streak - 1), BACKOFF_MAX_MIN))
+    return until if until > utcnow() else None
+
+
+def confirm_stale(
+    session: Session, adapter: SourceAdapter, max_age_hours: int = 72, max_checks: int = 20
+) -> IngestResult:
+    """Re-check listings that searches haven't returned for a while on their own advert page.
+
+    Searches stop after CRAWL_MAX_PAGES, so "not seen" alone doesn't mean sold. Watched cars go first;
+    the rest wait for a later cycle. No advert (or 404/410) → removed; still online → a normal sighting.
+    """
+    cutoff = utcnow() - timedelta(hours=max_age_hours)
+    candidates = session.scalars(
+        select(Listing)
+        .where(Listing.status == "active", Listing.source == adapter.name, Listing.last_seen_at < cutoff)
+        .order_by(Listing.id.in_(select(WatchlistItem.listing_id)).desc(), Listing.last_seen_at)
+        .limit(max_checks)
+    ).all()
+    result = IngestResult()
     now = utcnow()
-    for listing in stale:
-        listing.status = "removed"
-        listing.removed_at = now
-    return [x.id for x in stale]
+    for listing in candidates:
+        try:
+            raw = adapter.detail(listing.url or listing.source_id)
+        except SourceBlocked as exc:
+            session.add(CrawlRun(source=adapter.name, query_key="stale-check", started_at=now, finished_at=utcnow(),
+                                 status="blocked", error=str(exc)))
+            result.blocked = True
+            break
+        except httpx.HTTPStatusError as exc:
+            if exc.response.status_code not in (404, 410):
+                result.errors.append(f"{adapter.name}/{listing.source_id}: {exc}")
+                continue
+            raw = None
+        except Exception as exc:  # network trouble: try again next cycle
+            result.errors.append(f"{adapter.name}/{listing.source_id}: {exc}")
+            continue
+        if raw is None:
+            listing.status = "removed"
+            listing.removed_at = now
+            result.removed.append(listing.id)
+        else:
+            result.merge(ingest_many(session, [raw], now=now))
+    session.flush()
+    return result
 
 
 def queries_for_crawl(session: Session) -> list[SourceQuery]:

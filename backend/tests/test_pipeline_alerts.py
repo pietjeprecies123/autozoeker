@@ -5,9 +5,9 @@ from sqlalchemy import select
 from app.alerts import engine, ntfy
 from app.analysis import refresh
 from app.demo.seed import demo_tick
-from app.ingest.pipeline import IngestResult, ingest_many, mark_stale, upsert
-from app.models import AlertSent, Listing, PriceHistory, Profile, SavedSearch, WatchlistItem
-from app.sources.base import RawListing
+from app.ingest.pipeline import IngestResult, blocked_until, confirm_stale, crawl, ingest_many, upsert
+from app.models import AlertSent, CrawlRun, Listing, PriceHistory, Profile, SavedSearch, WatchlistItem
+from app.sources.base import RawListing, SourceBlocked, SourceQuery
 from app.util import utcnow
 
 
@@ -41,11 +41,65 @@ def test_cross_site_dedupe_by_kenteken_and_fingerprint(session):
     assert d.group_id == (c.group_id or c.id)
 
 
-def test_mark_stale(session):
-    listing, _ = upsert(session, raw(), enrich=False)
+class FakeAdapter:
+    name = "autoscout24"
+    label = "fake"
+    verified = True
+
+    def __init__(self, online=(), blocked=False):
+        self.online = set(online)
+        self.blocked = blocked
+        self.checked: list[str] = []
+
+    def search(self, query):
+        if self.blocked:
+            raise SourceBlocked("429 from example")
+        return iter(())
+
+    def detail(self, url_or_id):
+        self.checked.append(url_or_id)
+        if self.blocked:
+            raise SourceBlocked("429 from example")
+        sid = url_or_id.rsplit("/", 1)[-1]
+        return raw(sid=sid, plate=None) if sid in self.online else None
+
+    def supports_url(self, url):
+        return False
+
+
+def test_confirm_stale_checks_the_advert_before_removing(session):
+    old = utcnow() - timedelta(days=5)
+    gone, _ = upsert(session, raw(sid="gone", plate=None), enrich=False)
+    alive, _ = upsert(session, raw(sid="alive", plate=None), enrich=False)
+    fresh, _ = upsert(session, raw(sid="fresh", plate=None), enrich=False)
+    watched, _ = upsert(session, raw(sid="watched", plate=None), enrich=False)
+    for listing in (gone, alive, watched):
+        listing.last_seen_at = old
+    session.add(WatchlistItem(listing_id=watched.id))
+    session.flush()
+    adapter = FakeAdapter(online={"alive", "watched"})
+    res = confirm_stale(session, adapter, max_age_hours=72)
+    assert adapter.checked[0].endswith("/watched")  # watched cars are checked first
+    assert "https://x/fresh" not in adapter.checked
+    assert res.removed == [gone.id] and gone.status == "removed"
+    assert alive.status == "active" and alive.last_seen_at > old
+    assert watched.status == "active"
+
+
+def test_blocked_source_backs_off_and_keeps_listings(session):
+    listing, _ = upsert(session, raw(sid="kept", plate=None), enrich=False)
     listing.last_seen_at = utcnow() - timedelta(days=5)
-    removed = mark_stale(session, ["autoscout24"], max_age_hours=72)
-    assert removed == [listing.id] and listing.status == "removed"
+    adapter = FakeAdapter(blocked=True)
+    assert crawl(session, adapter, SourceQuery(make="toyota")).blocked
+    first = blocked_until(session, "autoscout24")
+    assert first is not None and timedelta(minutes=55) < first - utcnow() <= timedelta(minutes=60)
+    res = confirm_stale(session, adapter)
+    assert res.blocked and listing.status == "active"
+    second = blocked_until(session, "autoscout24")
+    assert timedelta(minutes=115) < second - utcnow() <= timedelta(minutes=120)  # doubles
+    session.add(CrawlRun(source="autoscout24", status="ok", finished_at=utcnow()))
+    session.flush()
+    assert blocked_until(session, "autoscout24") is None
 
 
 def test_ingest_many_isolates_errors(session):

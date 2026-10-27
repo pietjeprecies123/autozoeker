@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import func, select
@@ -11,6 +13,7 @@ from app.ai.client import AiRefused, AiUnavailable
 from app.api.deps import DB, get_listing, get_vehicle
 from app.api.serialize import card
 from app.config import get_settings
+from app.ingest.pipeline import blocked_until
 from app.insights import best_deals, model_insights
 from app.knowledge import service as knowledge
 from app.models import (
@@ -137,6 +140,11 @@ def insights_make(make: str, model: str | None = None, fuel: str | None = None, 
 
 
 # -- status & admin -------------------------------------------------------------------------------
+def _utc_iso(value: datetime | None) -> str | None:
+    """Stored datetimes are naive UTC; mark them so the browser shows local time."""
+    return value.isoformat() + "Z" if value else None
+
+
 @router.get("/status")
 def status(session: Session = DB):
     settings = get_settings()
@@ -157,7 +165,7 @@ def status(session: Session = DB):
         "profiles": session.scalar(select(func.count()).select_from(Profile)) or 0,
         "valuation": {"trained_at": model.trained_at if model else None, "metrics": model.metrics if model else {},
                       "rows": model.n_rows if model else 0},
-        "sources": adapters_info(),
+        "sources": [dict(src, blocked_until=_utc_iso(blocked_until(session, src["name"]))) for src in adapters_info()],
         "settings": {
             "demo_mode": settings.demo_mode, "sources": settings.source_list, "crawl_interval_min": settings.crawl_interval_min,
             "request_delay_s": settings.crawl_request_delay_s, "ai_enabled": settings.ai_enabled,

@@ -26,7 +26,7 @@ def crawl_cycle() -> dict:
     from app.alerts.engine import process
     from app.analysis import refresh
     from app.demo.seed import demo_tick
-    from app.ingest.pipeline import IngestResult, crawl, mark_stale, queries_for_crawl
+    from app.ingest.pipeline import IngestResult, blocked_until, confirm_stale, crawl, queries_for_crawl
     from app.sources.registry import enabled_adapters
 
     if not _lock.acquire(blocking=False):
@@ -41,10 +41,18 @@ def crawl_cycle() -> dict:
             if adapters:
                 queries = queries_for_crawl(session)
                 for adapter in adapters:
+                    if blocked_until(session, adapter.name):
+                        continue
+                    blocked = False
                     for q in queries:
                         q.max_pages = settings.crawl_max_pages
-                        total.merge(crawl(session, adapter, q))
-                total.removed += mark_stale(session, [a.name for a in adapters])
+                        r = crawl(session, adapter, q)
+                        total.merge(r)
+                        if r.blocked:
+                            blocked = True
+                            break
+                    if not blocked:
+                        total.merge(confirm_stale(session, adapter))
             refresh(session, total.touched)
             alerts = process(session, total)
         result = {"new": len(total.new), "price_changed": len(total.price_changed), "back": len(total.back),

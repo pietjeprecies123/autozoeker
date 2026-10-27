@@ -104,6 +104,11 @@ export default function StatusPage() {
               <div className="mt-1 text-xs text-slate-500">
                 {src.verified ? "Parser geverifieerd" : "Parser niet geverifieerd – draai `autozoeker verify-sources`"} · actief: {s.active_by_source[src.name] ?? 0}
               </div>
+              {src.blocked_until && (
+                <div className="mt-1 text-xs text-rose-700">
+                  Geweigerd door de site; gepauzeerd tot {date(src.blocked_until)} {new Date(src.blocked_until).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })}
+                </div>
+              )}
             </div>
           ))}
         </div>
