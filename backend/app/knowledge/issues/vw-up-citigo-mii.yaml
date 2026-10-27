@@ -1,0 +1,126 @@
+id: vw-up-citigo-mii
+title: Volkswagen up! / Škoda Citigo / SEAT Mii (technisch identiek)
+summary: >-
+  Volgens de ANWB zijn de drie technisch gelijk, dus de euvels ook. Let op roest bij de achterwielkasten
+  (vroege exemplaren hebben geen binnenwielkuipen), vocht in de voetruimte, het schokkerige
+  geautomatiseerde ASG-schakelen, een defect gasklephuis en pen-bobines. Bij de elektrische
+  e-up!/Citigo-e/Mii electric liep een terugroepactie voor de hoogvoltage-accu (isolatiefout).
+applies_to:
+  - {make: volkswagen, model: up}
+  - {make: skoda, model: citigo}
+  - {make: seat, model: mii}
+issues:
+  - id: up-rust-wheelarch
+    title: Roest boven/achter de achterwielkasten en rond de tankklep
+    severity: medium
+    likelihood: medium
+    category: carrosserie
+    years: [2011, 2016]
+    summary: >-
+      Vroege auto's zijn gebouwd zonder binnenwielkuipen achter; zout en vuil hopen zich op tegen het
+      plaatwerk. Eigenaren melden blaasjes in de lak boven de achterwielkasten en roest rond de tankklep.
+      Latere auto's kregen wielkuipen.
+    symptoms:
+      - Blaasjes of bruine verkleuring in de lak boven de achterwielen
+      - Roest rond de rand van de tankklep
+    fix:
+      type: none
+      description: Plaatwerkherstel; garantieclaims op doorroesten werden volgens eigenaren vaak afgewezen.
+    verify:
+      - Bekijk (en voel) de achterwielkasten en de tankklep van dichtbij; kijk of er wielkuipen gemonteerd zijn.
+    questions:
+      - Is er ooit roestherstel aan de achterwielkasten gedaan?
+    test_drive: []
+    sources:
+      - {title: "au7o: bekende problemen VW up! (DE)", url: "https://au7o.io/de/known-issues/volkswagen-up"}
+      - {title: "ANWB: Škoda Citigo occasion-review", url: "https://www.anwb.nl/auto/tests/auto-reviews/detail/afaf2b7b75690fdfc993a1481c25faeb"}
+    reviewed: 2026-10-27
+
+  - id: up-asg
+    title: Schokkerige geautomatiseerde ASG-versnellingsbak
+    severity: low
+    likelihood: medium
+    category: transmissie
+    transmissions: [automaat]
+    fuels: [benzine]
+    summary: >-
+      De geautomatiseerde handbak (ASG) schakelt traag en schokkerig; ASG- en koppelingsproblemen worden
+      genoemd als veelvoorkomende klachten bij de up!.
+    symptoms:
+      - Knikkend/traag schakelen
+    fix:
+      type: none
+      description: Inleren/afstellen van de ASG of koppeling vervangen.
+    verify: []
+    questions:
+      - Zijn er storingen of reparaties aan de automaat/koppeling geweest?
+    test_drive:
+      - Test de ASG in de stad: wegrijden, hellingproef en langzaam rijden.
+    sources:
+      - {title: "au7o: bekende problemen VW up! (FR)", url: "https://au7o.io/fr/known-issues/volkswagen-up"}
+    reviewed: 2026-10-27
+
+  - id: up-water-footwell
+    title: Water in de voetruimte
+    severity: low
+    likelihood: medium
+    category: carrosserie
+    summary: Waterinsijpeling in de voetruimte wordt genoemd als een van de bekende problemen.
+    symptoms:
+      - Natte vloermatten, beslagen ruiten, muffe geur
+    fix:
+      type: none
+      description: Lekkende afdichtingen opsporen en herstellen.
+    verify:
+      - Voel onder de vloermatten (voor en achter) naar vocht.
+    questions:
+      - Heeft u ooit last gehad van een natte vloer of beslagen ramen?
+    test_drive: []
+    sources:
+      - {title: "au7o: bekende problemen VW up! (DE)", url: "https://au7o.io/de/known-issues/volkswagen-up"}
+    reviewed: 2026-10-27
+
+  - id: up-engine-electrics
+    title: Defect gasklephuis of bobine (1.0 driecilinder)
+    severity: low
+    likelihood: medium
+    category: motor
+    fuels: [benzine]
+    summary: >-
+      De ANWB noemt een defect elektronisch gasklephuis (motor reageert niet meer op gas), een vervuilde
+      nokkenassensor (motor slaat af) en kapotte pen-bobines (motor loopt op twee cilinders; doorrijden kan
+      de katalysator beschadigen).
+    symptoms:
+      - Motor blijft stationair draaien en reageert niet op gas
+      - Motor loopt onrustig/schudt (op twee cilinders) met motorstoringslampje
+    fix:
+      type: maintenance
+      description: Gasklephuis of bobine vervangen; nokkenassensor reinigen.
+    verify: []
+    questions:
+      - Zijn er storingen geweest met het gaspedaal of onrustig lopen? Zijn bobines of gasklephuis vervangen?
+    test_drive:
+      - Let op onrustig stationair toerental en direct reageren op het gaspedaal.
+    sources:
+      - {title: "ANWB: Škoda Citigo occasion-review", url: "https://www.anwb.nl/auto/tests/auto-reviews/detail/afaf2b7b75690fdfc993a1481c25faeb"}
+    reviewed: 2026-10-27
+
+  - id: up-ev-battery-recall
+    title: e-up! / Citigo-e iV / Mii electric – terugroepactie hoogvoltage-accu (isolatiefout)
+    severity: high
+    likelihood: medium
+    category: accu
+    fuels: [elektrisch]
+    summary: Voor de elektrische versies liep een terugroepactie voor de hoogvoltage-accu vanwege isolatiefouten.
+    fix:
+      type: recall
+      description: Terugroepactie bij de dealer; Autozoeker toont per kenteken of er een open RDW-terugroepactie is.
+      rdw_recall_keywords: [batterij, accu, hoogvolt, hoogspanning, isolatie]
+    verify:
+      - Controleer de RDW-terugroepstatus van het kenteken (zie RDW-rapport).
+    questions:
+      - Is de terugroepactie voor de hoogvoltage-accu uitgevoerd? Mag ik de werkplaatsorder zien?
+    test_drive: []
+    sources:
+      - {title: "ANWB: Škoda Citigo occasion-review", url: "https://www.anwb.nl/auto/tests/auto-reviews/detail/afaf2b7b75690fdfc993a1481c25faeb"}
+    reviewed: 2026-10-27

@@ -1,0 +1,129 @@
+id: renault-nissan-dacia-tce
+title: Renault/Dacia/Nissan benzinemotoren – 1.2 TCe/DIG-T (2012–2018), 0.9 en 1.0 TCe
+summary: >-
+  De 1.2 TCe (H5Ft, Renault/Dacia) en de verwante 1.2 DIG-T (HR12DDT, Nissan Qashqai/Juke) van ca. 2012–2018
+  staan bekend om hoog olieverbruik dat tot motorschade kan leiden; in Frankrijk loopt hierover een
+  rechtszaak. Bij de 1.2 DIG-T wordt ook kettingrammel bij koude start gemeld. De kleinere 0.9 TCe kan
+  koelvloeistof lekken (thermostaathuis); bij de 1.0 TCe (H4D) noemen bronnen olieverbruik.
+applies_to:
+  - {make: renault, model: clio}
+  - {make: renault, model: captur}
+  - {make: renault, model: megane}
+  - {make: renault, model: kadjar}
+  - {make: dacia, model: sandero}
+  - {make: dacia, model: duster}
+  - {make: nissan, model: qashqai}
+  - {make: nissan, model: juke}
+issues:
+  - id: renault-1-2-tce-oil
+    title: 1.2 TCe (H5Ft) – hoog olieverbruik, motorschade
+    severity: high
+    likelihood: medium
+    category: motor
+    fuels: [benzine]
+    years: [2012, 2018]
+    applies_to:
+      - {make: renault, model: clio}
+      - {make: renault, model: captur}
+      - {make: renault, model: megane}
+      - {make: renault, model: kadjar}
+      - {make: dacia, model: duster}
+    engine:
+      keywords: ["1.2 tce", "tce 115", "tce 120", "tce 125", "tce 130", "energy tce 120", "1.2 tce 120"]
+      exclude_keywords: ["0.9", "1.3", "1.0", "1.6"]
+      cc: [1150, 1250]
+    summary: >-
+      Tussen eind 2012 en medio 2016 zijn in Europa ca. 400.000 auto's met deze motor geleverd. Het hoge
+      olieverbruik kan volgens UFC-Que Choisir de uitlaatkleppen beschadigen en tot vermogensverlies of
+      motorschade leiden. Renault zegt technische en financiële hulp te hebben geboden.
+    symptoms:
+      - Veel olie bijvullen tussen beurten; oliedrukwaarschuwing
+      - Vermogensverlies, onrustig lopen
+    fix:
+      type: none
+      description: Geen algemene terugroepactie; Renault bood per geval technische/financiële tegemoetkoming.
+    verify:
+      - Vraag naar het olieverbruik en facturen van eventuele motorreparaties (zuigers/veren, kleppen).
+      - Peilstok checken; onderhoudshistorie compleet?
+    questions:
+      - Hoeveel olie gebruikt de motor per 1.000 km? Is er ooit een olieverbruikstest of motorreparatie gedaan?
+    test_drive:
+      - Let op blauwe rook bij gas geven na stationair draaien en op oliedrukwaarschuwingen.
+    sources:
+      - {title: "Autoblog: Renault voor de rechter vanwege olieverbruik 1.2 TCe", url: "https://www.autoblog.nl/nieuws/renault-voor-de-rechter-vanwege-olieverbruik-1-2-tce-3504029"}
+      - {title: "Motorsactu: défaut des moteurs Renault 1.2 TCe", url: "https://motorsactu.com/defaut-des-moteurs-renault-les-voitures-montees-en-algerie-non-concernees"}
+    reviewed: 2026-10-27
+
+  - id: nissan-1-2-digt
+    title: 1.2 DIG-T (HR12DDT) – olieverbruik en kettingrammel bij koude start
+    severity: high
+    likelihood: medium
+    category: motor
+    fuels: [benzine]
+    years: [2013, 2018]
+    applies_to:
+      - {make: nissan, model: qashqai}
+      - {make: nissan, model: juke}
+    engine:
+      keywords: ["1.2 dig-t", "dig-t 115", "1.2 dig t", "1.2"]
+      exclude_keywords: ["1.3", "1.5", "1.6", "dci", "1.0"]
+      cc: [1150, 1250]
+    summary: >-
+      Deze motor deelt zijn basis met de Renault 1.2 TCe. Bronnen noemen olieverbruik (Nissan
+      servicebulletin, volgens een eigenarenforum) en problemen met de kettingspanner/ketting die bij koude
+      start ratelt. Een Franse steekproef (146 auto's, methode niet controleerbaar) meldt kettingrammel bij
+      19% vóór 100.000 km.
+    symptoms:
+      - Ratelen bij koude start
+      - Olie bijvullen tussen beurten
+    fix:
+      type: maintenance
+      description: Ketting/spanner vervangen; olieverbruik laten meten bij de dealer.
+    verify:
+      - Vraag facturen van kettingvervanging en olieverversingen.
+    questions:
+      - Is de distributieketting of spanner vervangen? Hoeveel olie gebruikt de motor?
+    test_drive:
+      - Start de motor koud en luister de eerste seconden naar ratelen.
+    sources:
+      - {title: "Carverif: Nissan Qashqai J11 1.2 DIG-T fiabilité", url: "https://carverif.fr/blogs/fiabilite-voitures/nissan-qashqai-j11-essence-1-2-dig-t"}
+      - {title: "Wheelstreet: Nissan Qashqai gids", url: "https://www.wheelstreet.lt/en/straipsniai/126-nissan-qashqai-gidas"}
+      - {title: "Qashqai Forums: oil consumption bulletin", url: "https://www.qashqaiforums.co.uk/viewtopic.php?p=82247"}
+    reviewed: 2026-10-27
+
+  - id: tce-0-9-1-0
+    title: 0.9 TCe koelvloeistoflek / 1.0 TCe olieverbruik
+    severity: medium
+    likelihood: low
+    category: motor
+    fuels: [benzine, lpg]
+    applies_to:
+      - {make: renault, model: clio}
+      - {make: renault, model: captur}
+      - {make: dacia, model: sandero}
+      - {make: dacia, model: duster}
+    engine:
+      keywords: ["0.9 tce", "tce 90", "1.0 tce", "tce 100", "tce 90", "0.9", "1.0 tce 100"]
+      exclude_keywords: ["1.2", "1.3", "1.5", "dci", "e-tech"]
+    summary: >-
+      De 0.9 TCe kan koelvloeistof lekken bij het thermostaathuis of elders in het koelcircuit; onopgemerkt
+      verlies kan via oververhitting de cilinderkop beschadigen. Voor de 1.0 TCe (H4D) meldt een aggregatiesite
+      olieverbruik en servicebulletins (zuigerveren/PCV). De ANWB noemt bij de Sandero II diverse kleine
+      technische euvels. Bronnen zijn deels secundair.
+    symptoms:
+      - Koelvloeistofpeil zakt; temperatuurwaarschuwing
+      - Olie bijvullen tussen beurten (1.0 TCe)
+    fix:
+      type: maintenance
+      description: Thermostaathuis/koelcircuit herstellen; olieverbruik laten meten.
+    verify:
+      - Controleer koelvloeistof- en oliepeil; kijk naar lekkagesporen bij het thermostaathuis.
+    questions:
+      - Moet u koelvloeistof of olie bijvullen? Is het thermostaathuis ooit vervangen?
+    test_drive:
+      - Let op de temperatuurmeter na een langere rit.
+    sources:
+      - {title: "Fiches-Auto: fiabilité Dacia Sandero 2", url: "https://www.fiches-auto.fr/fiabilite-dacia/fiabilite-366-pannes-dacia-sandero-2.php"}
+      - {title: "au7o: Dacia Sandero bekende problemen", url: "https://au7o.io/known-issues/dacia-sandero"}
+      - {title: "ANWB: Dacia Sandero occasion-review", url: "https://www.anwb.nl/auto/tests/auto-reviews/detail/b06799ffb345a87e99dd11c699c6f1de"}
+    reviewed: 2026-10-27

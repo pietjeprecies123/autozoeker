@@ -1,0 +1,93 @@
+id: vag-tsi-engines
+title: TSI-benzinemotoren EA211 (1.0/1.2/1.4/1.5 TSI) – Volkswagen-groep
+summary: >-
+  De EA211-generatie TSI-motoren (vanaf ca. 2012) is in het algemeen solide. Twee bekende aandachtspunten:
+  de kunststof waterpomp/thermostaatbehuizing kan gaan lekken, en de 1.5 TSI 'evo' (vanaf 2017) kon bij een
+  koude motor schokkerig/haperend rijden ('kangoeroeën'), waarvoor Volkswagen een software-update uitbracht.
+applies_to:
+  - {make: volkswagen, model: polo}
+  - {make: volkswagen, model: golf}
+  - {make: volkswagen, model: t-roc}
+  - {make: volkswagen, model: t-cross}
+  - {make: volkswagen, model: tiguan}
+  - {make: volkswagen, model: touran}
+  - {make: volkswagen, model: passat}
+  - {make: volkswagen, model: arteon}
+  - {make: skoda, model: fabia}
+  - {make: skoda, model: octavia}
+  - {make: skoda, model: scala}
+  - {make: skoda, model: kamiq}
+  - {make: skoda, model: karoq}
+  - {make: skoda, model: kodiaq}
+  - {make: skoda, model: superb}
+  - {make: seat, model: ibiza}
+  - {make: seat, model: leon}
+  - {make: seat, model: arona}
+  - {make: seat, model: ateca}
+  - {make: cupra, model: formentor}
+  - {make: audi, model: a1}
+  - {make: audi, model: a3}
+  - {make: audi, model: q2}
+  - {make: audi, model: q3}
+issues:
+  - id: ea211-coolant-pump
+    title: Waterpomp/thermostaatbehuizing (kunststof) lekt koelvloeistof
+    severity: medium
+    likelihood: medium
+    category: motor
+    years: [2012, null]
+    fuels: [benzine, hybride, plugin_hybride]
+    engine:
+      keywords: ["1.0 tsi", "1.2 tsi", "1.4 tsi", "1.5 tsi", "1.0 etsi", "1.5 etsi", "1.4 tfsi", "30 tfsi", "35 tfsi", "1.0 tfsi"]
+    summary: >-
+      De gecombineerde waterpomp/thermostaatunit van kunststof kan scheuren of gaan lekken door hitte-
+      wisselingen; bij de 1.4 TSI wordt vervanging vóór 100.000 km regelmatig genoemd. Onopgemerkt
+      koelvloeistofverlies kan tot oververhitting leiden. Bronnen: reviewsite en eigenarenforums.
+    symptoms:
+      - Koelvloeistofpeil daalt; melding 'koelvloeistof bijvullen'
+      - Witte/roze aanslag of zoete geur bij de motor (bij de distributiekap)
+    fix:
+      type: maintenance
+      description: Vervanging van de waterpomp/thermostaatunit (en vaak de aandrijfriem daarvan).
+    verify:
+      - Kijk onder de motorkap bij de waterpompunit naar aanslag of vochtsporen.
+      - Vraag of de waterpomp/thermostaat al eens vervangen is (factuur).
+    questions:
+      - Is de waterpomp of thermostaatbehuizing al eens vervangen? Moet u koelvloeistof bijvullen?
+    test_drive:
+      - Let op de koelvloeistoftemperatuur en eventuele meldingen na een langere rit.
+    sources:
+      - {title: "AutoScore: 1.4 TSI EA211", url: "https://autoscore.pro/engine/1.4-tsi-ea211"}
+      - {title: "SEATCupra.net: EA211 water pump", url: "https://www.seatcupra.net/forums/threads/ea-211-water-pump-a-nightmare.462918/post-4944216"}
+      - {title: "SEATCupra.net: vervangen thermostaat/waterpomp 1.4 TSI CZEA", url: "https://www.seatcupra.net/forums/resources/guide-to-replacing-the-thermostat-water-pump-unit-on-the-1-4tsi-czea-engine.101"}
+    reviewed: 2026-10-27
+
+  - id: tsi-1-5-evo-judder
+    title: 1.5 TSI evo hapert/schokt bij koude motor
+    severity: low
+    likelihood: medium
+    category: motor
+    years: [2017, 2021]
+    fuels: [benzine, hybride]
+    engine:
+      keywords: ["1.5 tsi", "1.5 etsi", "35 tfsi", "1.5 tfsi"]
+    summary: >-
+      Vooral bij een koude motor en lage snelheden kan de auto inhouden/schokken ('kangoeroeën').
+      Volkswagen bracht een software-update uit die volgens VW werkt; volgens eigenaren is het
+      verschijnsel daarmee grotendeels (niet altijd helemaal) verholpen.
+    symptoms:
+      - Inhouden en schokken bij optrekken met koude motor, vooral in lage versnellingen
+    repair_cost_eur: [0, 300]
+    fix:
+      type: software
+      description: Motorsoftware-update via de dealer; vraag op chassisnummer of die is uitgevoerd.
+    verify:
+      - Vraag de dealer (op chassisnummer) of de motorsoftware-update voor de 1.5 TSI is uitgevoerd.
+    questions:
+      - Is de software-update voor het inhouden bij koude motor uitgevoerd? Merkt u nog iets bij koude start?
+    test_drive:
+      - Rij met een koude motor weg en trek rustig op in de eerste drie versnellingen; let op inhouden/schokken.
+    sources:
+      - {title: "HonestJohn: 1.5 TSI evo engine issues", url: "https://www.honestjohn.co.uk/15-tsi-engine-issues/"}
+      - {title: "Auto Express: juddering VW Group cars", url: "https://www.autoexpress.co.uk/car-news/107558/juddering-vw-group-cars-no-end-in-"}
+    reviewed: 2026-10-27

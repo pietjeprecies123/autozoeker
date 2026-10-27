@@ -1,0 +1,89 @@
+id: ev-12v-software
+title: MG4, Polestar 2 en Lynk & Co 01 – 12V-accu, software en kleine euvels
+summary: >-
+  Bij deze relatief nieuwe merken/modellen gaan de meeste klachten over software en de 12V-accu, niet over
+  de hoogvoltage-accu. Controleer of updates en terugroepacties zijn uitgevoerd.
+applies_to:
+  - {make: mg, model: mg4}
+  - {make: polestar, model: "2"}
+  - {make: lynk-co, model: "01"}
+issues:
+  - id: mg4-12v
+    title: MG4 – 12V-accu loopt leeg (software DC/DC-converter)
+    severity: medium
+    likelihood: medium
+    category: elektrisch
+    applies_to: [{make: mg, model: mg4}]
+    summary: >-
+      De software laadt de 12V-accu onvoldoende bij als de auto geparkeerd staat of langzaam AC laadt;
+      oplossing volgens een bron: vervanging door een (AGM-)accu met grotere capaciteit plus een
+      software-update van gateway en DC/DC-converter. Vooral bij 2023–2024-modellen. Bronnen zijn
+      grotendeels eigenarenforums (Brits/Australisch).
+    symptoms:
+      - Auto start niet/ontgrendelt niet door lege 12V-accu
+      - Laadsessies starten niet betrouwbaar
+    fix:
+      type: software
+      description: Software-update (gateway, DC/DC) en zo nodig een nieuwe 12V-accu via de dealer.
+      rdw_recall_keywords: [12v, 12 v, accu, software]
+    verify:
+      - Vraag of de 12V-accu en de software zijn bijgewerkt (werkorders).
+    questions:
+      - Heeft de auto ooit stilgestaan door een lege 12V-accu? Zijn de software-updates uitgevoerd?
+      - Zijn beide sleutels aanwezig?
+    test_drive:
+      - Test laden aan een AC-paal; let op meldingen bij het opstarten.
+    sources:
+      - {title: "australiancar.reviews: MG4 problemen", url: "https://australiancar.reviews/?p=102689"}
+      - {title: "MGEVs forum: MG4 12V battery", url: "https://www.mgevs.com/threads/12v-battery-charging.13143/page-2"}
+    reviewed: 2026-10-27
+
+  - id: polestar2-12v-software
+    title: Polestar 2 – 12V-waarschuwingen en software/TCAM-storingen
+    severity: low
+    likelihood: medium
+    category: elektrisch
+    applies_to: [{make: polestar, model: "2"}]
+    summary: >-
+      Eigenaren melden 12V-waarschuwingen (ook bij een gezonde hoofdaccu), vastlopers van het infotainment en
+      storingen van de telematica (TCAM) waardoor over-the-air-updates niet binnenkomen. Er liepen
+      software-terugroepacties (achteruitrijcamera; bij vroege 2021-auto's mogelijk verlies van
+      aandrijving). Grootschalige problemen met de hoogvoltage-accu zijn niet gemeld.
+    fix:
+      type: software
+      description: Software-updates (OTA of dealer); 12V-accu testen/vervangen.
+      rdw_recall_keywords: [camera, software, aandrijving]
+    verify:
+      - Controleer de softwareversie en de RDW-terugroepstatus.
+    questions:
+      - Is de software up-to-date en komen updates nog over-the-air binnen? Is de 12V-accu vervangen?
+    test_drive:
+      - Controleer achteruitrijcamera en infotainment op vastlopers.
+    sources:
+      - {title: "Recharged: Polestar 2 common problems and fixes", url: "https://recharged.com/articles/polestar-2-common-problems-and-fixes/"}
+    reviewed: 2026-10-27
+
+  - id: lynk01-anwb
+    title: Lynk & Co 01 – lekkend thermostaathuis (vroege auto's), laadstekker-melding, water via schuifdak
+    severity: low
+    likelihood: medium
+    category: diversen
+    applies_to: [{make: lynk-co, model: "01"}]
+    summary: >-
+      De ANWB noemt de 01 vrij probleemloos. Bekend: bij vroege exemplaren kan het thermostaathuis lekken, het
+      dashboard kan blijven melden dat de laadstekker is aangesloten, en water kan via het schuif-/kanteldak
+      binnenkomen en zich op de vloer verzamelen. Vraag ook naar de accugezondheid (SoH) van de plug-in-accu.
+    fix:
+      type: maintenance
+      description: Thermostaathuis vervangen; afvoeren van het panoramadak reinigen/herstellen.
+    verify:
+      - Controleer koelvloeistofpeil en voel onder de matten naar vocht.
+      - Vraag een SoH-rapport van de plug-in-accu.
+    questions:
+      - Is het thermostaathuis vervangen? Is er ooit water binnengekomen via het dak?
+    test_drive:
+      - Laad de auto aan een paal en controleer of de laadmelding verdwijnt na loskoppelen.
+    sources:
+      - {title: "ANWB: Lynk & Co 01 occasion-review", url: "https://www.anwb.nl/auto/tests/auto-reviews/detail/001b571080a86ce6dd226dc47cafda22"}
+      - {title: "AutoReview: tweedehands Lynk & Co 01", url: "https://www.autoreview.nl/tweedehands/aankooptips/id/36825/tweedehands-lynk-co-01-problemen-betrouwbaarheid-prijs"}
+    reviewed: 2026-10-27

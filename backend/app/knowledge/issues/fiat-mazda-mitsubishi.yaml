@@ -1,0 +1,104 @@
+id: fiat-mazda-mitsubishi
+title: Fiat 500 (Dualogic), Mazda 2.2 SkyActiv-D en Mitsubishi Outlander PHEV
+summary: >-
+  Fiat 500 met Dualogic-automaat: de hydraulische actuator kan lekken/uitvallen. Mazda 2.2 SkyActiv-D:
+  olieverdunning bij veel korte ritten (roetfilterregeneratie) en lekkende injector-afdichtingen.
+  Mitsubishi Outlander PHEV: beoordeel de accugezondheid en het laden.
+applies_to:
+  - {make: fiat, model: "500"}
+  - {make: mazda, model: cx-5}
+  - {make: mazda, model: "3"}
+  - {make: mitsubishi, model: outlander}
+issues:
+  - id: fiat-dualogic
+    title: Dualogic-automaat – actuator lekt of faalt (valt in neutraal)
+    severity: medium
+    likelihood: medium
+    category: transmissie
+    transmissions: [automaat]
+    applies_to: [{make: fiat, model: "500"}]
+    summary: >-
+      Eigenaren melden dat de bak in neutraal valt of niet meer schakelt, vaak door een lekkende of defecte
+      actuator (soms olie in de schakelpositiesensor). Bijvullen zonder diagnose wordt afgeraden.
+      Bron: eigenarenforum (anekdotisch).
+    symptoms:
+      - Valt in neutraal of schakelt niet meer; foutmelding versnellingsbak
+      - Vertraagd schakelen
+    fix:
+      type: none
+      description: Actuator reviseren of vervangen (specialist); controle op olielekkage.
+    verify:
+      - Kijk naar olielekkage bij de actuator; vraag naar eerdere reparaties.
+    questions:
+      - Is de Dualogic-actuator of -pomp ooit vervangen of gerepareerd?
+    test_drive:
+      - Rij in de stad en op een helling; let op neutraal-meldingen en traag schakelen.
+    sources:
+      - {title: "FiatForum: the one and only Dualogic failure thread", url: "https://www.fiatforum.com/threads/the-one-and-only-dualogic-failure-thread.425006/page-28"}
+    reviewed: 2026-10-27
+
+  - id: mazda-skyactiv-d
+    title: 2.2 SkyActiv-D – olieverdunning (roetfilter) en injector-afdichtingen
+    severity: high
+    likelihood: medium
+    category: motor
+    fuels: [diesel]
+    applies_to:
+      - {make: mazda, model: cx-5}
+      - {make: mazda, model: "3"}
+    engine:
+      keywords: ["2.2", "skyactiv-d", "2.2d", "skyactiv d"]
+      exclude_keywords: ["1.5", "1.8"]
+    summary: >-
+      Bij veel korte ritten haalt het roetfilter de regeneratietemperatuur niet; het systeem spuit extra diesel
+      in, waarvan een deel in de olie komt. Het oliepeil stijgt dan (Mazda adviseerde volgens eigenaren om het
+      peil elke 1.000 km te controleren). Lekkende koperen injector-afdichtingen geven koolafzetting die de
+      oliezeef kan verstoppen (oliedrukfouten; één eigenaar meldt ca. £1.600 reparatie). Bronnen: forums en
+      onderdelengidsen.
+    symptoms:
+      - Oliepeil stijgt (boven de 'X' op de peilstok)
+      - Roetfilter-/DPF-waarschuwing (P2002), oliedrukfout (P055F/P0524)
+    fix:
+      type: maintenance
+      description: Olie verversen bij stijgend peil; injector-afdichtingen vervangen; DPF-drukleidingen controleren.
+    verify:
+      - Peilstok: staat het peil niet boven de X-markering? Ruikt de olie naar diesel?
+      - Vraag naar injector-/afdichtingsvervanging en DPF-reparaties.
+    questions:
+      - Rijdt u veel korte ritten? Is het oliepeil ooit gestegen? Zijn de injector-afdichtingen vervangen?
+    test_drive:
+      - Rijd een stuk snelweg en let op DPF- en oliedrukmeldingen.
+    sources:
+      - {title: "WhoCanFixMyCar: common problems Mazda CX-5", url: "https://www.whocanfixmycar.com/advice/common-problems-with-the-mazda-cx-5"}
+      - {title: "Go-Parts: OBD P2002 Mazda CX-5 2.2 SkyActiv", url: "https://www.go-parts.com/garage/obd-p2002-mazda-cx-5-2012-2018-2-2l-skyactiv"}
+      - {title: "Mazdas247: CX-5 2.2 diesel oil pressure problem", url: "https://mazdas247.com/forum/t/2014-cx-5-2-2l-diesel-with-oil-pressure-problem.123870418/page-3"}
+    reviewed: 2026-10-27
+
+  - id: outlander-phev-battery
+    title: Outlander PHEV – accugezondheid, laadproblemen en 12V-accu
+    severity: medium
+    likelihood: medium
+    category: accu
+    fuels: [plugin_hybride]
+    applies_to: [{make: mitsubishi, model: outlander}]
+    summary: >-
+      Bronnen verschillen over hoe snel de accu degradeert; koopgidsen adviseren een SoH van minimaal ~75%
+      (na 100.000 km) en exemplaren onder ~65% te mijden. Laadstoringen en een zwakke 12V-accu (vreemde
+      elektronische storingen) komen terug in meerdere bronnen.
+    symptoms:
+      - Elektrische actieradius veel lager dan nieuw
+      - Laden start niet of gaat langzaam
+    fix:
+      type: none
+      description: Accutest (SoH) bij dealer/specialist; 12V-accu vervangen bij storingen.
+    verify:
+      - Vraag een SoH-rapport van de tractie-accu.
+      - Test laden aan een paal; meet de elektrische actieradius bij volle accu.
+    questions:
+      - Wat is de accugezondheid (SoH)? Hoeveel km rijdt hij nog elektrisch op een volle accu?
+    test_drive:
+      - Rij een stuk elektrisch en kijk of de motor onverwacht bijspringt.
+    sources:
+      - {title: "Wheelstreet: Mitsubishi Outlander PHEV gids", url: "https://www.wheelstreet.lt/en/straipsniai/mitsubishi-outlander-phev-gidas"}
+      - {title: "AutoTrader.ca: 2018–2019 Outlander PHEV used vehicle review", url: "https://editorialsui.autotrader.ca/editorial/20200903/2018-2019-mitsubishi-outlander-phev-used-vehicle-review"}
+    reviewed: 2026-10-27

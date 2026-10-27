@@ -1,0 +1,161 @@
+id: ford
+title: Ford – 1.0 EcoBoost, PowerShift-automaat en Kuga plug-in hybride
+summary: >-
+  Drie bekende Ford-aandachtspunten: de 1.0 EcoBoost (oververhitting/koelvloeistofverlies bij vroege motoren
+  en een riem in olie die kan slijten), de PowerShift-dubbelekoppelingsbak (DPS6) in benzine-Fiesta's,
+  -Focussen en -EcoSports, en de accu van de Kuga plug-in hybride (terugroepacties wegens brandrisico).
+applies_to:
+  - {make: ford, model: fiesta}
+  - {make: ford, model: focus}
+  - {make: ford, model: ecosport}
+  - {make: ford, model: puma}
+  - {make: ford, model: kuga}
+issues:
+  - id: ecoboost-1-0-overheating
+    title: 1.0 EcoBoost – oververhitting/koelvloeistofverlies (vooral 2012–2014)
+    severity: high
+    likelihood: medium
+    category: motor
+    fuels: [benzine, hybride]
+    years: [2012, 2015]
+    applies_to:
+      - {make: ford, model: fiesta}
+      - {make: ford, model: focus}
+      - {make: ford, model: ecosport}
+    engine:
+      keywords: ["1.0 ecoboost", "1.0 eco boost", "ecoboost 1.0", "1.0"]
+      exclude_keywords: ["1.5", "1.6", "2.0", "tdci"]
+      cc: [950, 1050]
+    summary: >-
+      De ANWB waarschuwt dat de 1.0 EcoBoost (100/125/140 pk) gevoelig is voor oververhitting bij zware
+      belasting; verlies van koelvloeistof kan tot ernstige motorschade leiden. Ford voerde in 2015 een
+      servicecampagne uit voor een koelslang op motoren gebouwd oktober 2011–oktober 2013, en beloofde na
+      BBC-onderzoek reparaties bij oververhitting via de dealer te vergoeden (VK).
+    symptoms:
+      - Koelvloeistofpeil zakt; temperatuurwaarschuwing
+      - Witte rook, motorvermogen valt weg
+    fix:
+      type: campaign
+      description: Servicecampagne (koelslang) voor auto's gebouwd 10/2011–10/2013; koelvloeistof regelmatig controleren.
+      rdw_recall_keywords: [koelvloeistof, koelslang, oververhitting]
+    verify:
+      - Vraag de dealer (op chassisnummer) of de koelslang-campagne is uitgevoerd.
+      - Controleer koelvloeistof- en oliepeil; vraag naar eerdere oververhitting of koppakkingreparatie.
+    questions:
+      - Is de servicecampagne voor de koelslang uitgevoerd? Is de motor ooit oververhit geweest?
+    test_drive:
+      - Let na een snelwegrit op de temperatuurmeter en waarschuwingen.
+    sources:
+      - {title: "ANWB: EcoBoost-motor", url: "https://www.anwb.nl/auto/onderhoud-en-reparatie/auto-onderdelen/ecoboost-motor"}
+      - {title: "Express & Star: Ford to pay for repairs of EcoBoost engine fault", url: "https://www.expressandstar.com/news/motors/2018/10/01/ford-to-pay-for-repairs-of-ecoboost-engine-fault"}
+    reviewed: 2026-10-27
+
+  - id: ecoboost-1-0-wet-belt
+    title: 1.0 EcoBoost – riem in olie slijt (oliedrukverlies)
+    severity: high
+    likelihood: medium
+    category: motor
+    fuels: [benzine]
+    years: [2012, 2020]
+    applies_to:
+      - {make: ford, model: fiesta}
+      - {make: ford, model: focus}
+      - {make: ford, model: ecosport}
+      - {make: ford, model: puma}
+    engine:
+      keywords: ["1.0 ecoboost", "1.0 eco boost", "ecoboost 1.0", "1.0"]
+      exclude_keywords: ["hybrid", "mhev", "1.5", "1.6", "2.0", "tdci"]
+      cc: [950, 1050]
+    summary: >-
+      De ANWB noemt de distributieriem van de 1.0 EcoBoost een veelvoorkomend probleem: hij kan snel slijten
+      of scheuren met ernstige motorschade als gevolg; vervangen volgens schema en liever eerder. In de VS liep
+      een terugroepactie voor de Focus 1.0 (modeljaar 2016–2018) waarbij verkruimelde riemresten de oliezeef
+      verstopten. De mild-hybrid-versies (vanaf eind 2019) gebruiken volgens HonestJohn een ketting.
+    symptoms:
+      - Waarschuwing lage oliedruk; motorstoring
+    fix:
+      type: maintenance
+      description: Riem(en) vervangen volgens (vervroegd) schema; bij schade goodwill-regelingen per geval.
+      rdw_recall_keywords: [riem, oliedruk, oliepomp]
+    verify:
+      - Factuur van de laatste riemvervanging (datum, km-stand).
+    questions:
+      - Is de distributieriem al vervangen? Wanneer en bij hoeveel kilometer?
+    test_drive:
+      - Let op oliedrukwaarschuwingen.
+    sources:
+      - {title: "ANWB: EcoBoost-motor", url: "https://www.anwb.nl/auto/onderhoud-en-reparatie/auto-onderdelen/ecoboost-motor"}
+      - {title: "The Drive: Ford's self-clogging 1.0 EcoBoost recalled", url: "https://www.thedrive.com/news/fords-self-clogging-1-0-liter-ecoboost-engine-is-finally-getting-recalled"}
+      - {title: "HonestJohn: wet belt guide (welke auto's)", url: "https://honestjohn.co.uk/advice/owning-advice/wet-belt/"}
+    reviewed: 2026-10-27
+
+  - id: ford-powershift
+    title: PowerShift-dubbelekoppelingsbak (DPS6) schokt/slipt
+    severity: high
+    likelihood: high
+    category: transmissie
+    fuels: [benzine]
+    transmissions: [automaat]
+    years: [2010, 2018]
+    applies_to:
+      - {make: ford, model: fiesta}
+      - {make: ford, model: focus}
+      - {make: ford, model: ecosport}
+    engine:
+      keywords: ["powershift", "power shift", "pwrshft"]
+      exclude_keywords: ["tdci", "diesel"]
+    summary: >-
+      De droge dubbelekoppelingsbak in benzine-Fiesta's (1.5/1.6), -Focussen (1.6/2.0) en -EcoSports geeft
+      trillen bij wegrijden, schokken, slippen, lekkage en haperend schakelen; oorzaken waren lekkende
+      keerringen (olie op de droge koppeling), het koppelingsmateriaal en de besturingsmodule (TCM). Ford
+      verlengde in onder meer Australië de garantie en verloor daar rechtszaken; specifieke Europese regelingen
+      zijn in onze bronnen niet gevonden.
+    symptoms:
+      - Trillen/schokken bij optrekken vanuit stilstand
+      - Haperend of vertraagd schakelen, geen eerste versnelling bij stilstaan
+    fix:
+      type: software
+      description: Software-updates en vervanging van koppeling/keerringen/TCM via de dealer; vraag naar de historie.
+      rdw_recall_keywords: [versnellingsbak, transmissie, koppeling, tcm]
+    verify:
+      - Vraag facturen van koppelings- of TCM-vervanging en software-updates.
+    questions:
+      - Zijn de koppelingen, keerringen of de besturingsmodule van de PowerShift ooit vervangen?
+    test_drive:
+      - Rij veel stop-and-go; let op trillen bij wegrijden en schokken bij het terugschakelen.
+    sources:
+      - {title: "GoAuto: PowerShift DCT issues under control – Ford", url: "https://w.goauto.com.au/news/ford/powershift-dct-issues-under-control-ford/2015-09-03/20501.html"}
+      - {title: "CarComplaints: Ford dual clutch transmission lawsuit", url: "https://carcomplaints.com/news/2017/ford-dual-clutch-transmission-lawsuit.shtml"}
+    reviewed: 2026-10-27
+
+  - id: kuga-phev-battery
+    title: Kuga plug-in hybride – accu (brandrisico, terugroepacties)
+    severity: critical
+    likelihood: medium
+    category: accu
+    fuels: [plugin_hybride]
+    applies_to: [{make: ford, model: kuga}]
+    generations: [kuga-3]
+    summary: >-
+      In 2020 meldde Ford branden door oververhitting van het hoogspanningssysteem; ca. 26.000 Kuga PHEV's
+      (gebouwd juli 2019–juli 2020) werden teruggeroepen en eigenaren mochten tijdelijk niet extern laden.
+      Later volgde een terugroepactie voor Kuga PHEV's gebouwd augustus 2019–november 2023 (cellen met risico op
+      interne kortsluiting); volgens Test-Aankoop was er in België lange tijd geen structurele oplossing.
+    symptoms:
+      - Meldingen over het hybride systeem; laden geblokkeerd
+    fix:
+      type: recall
+      description: Terugroepactie(s) via de Ford-dealer (accucontrole/-vervanging, software). Controleer de RDW-status.
+      rdw_recall_keywords: [accu, batterij, hoogspanning, hoogvolt, brand, kortsluiting, cel]
+    verify:
+      - Bekijk in het RDW-rapport of de terugroepactie(s) zijn afgemeld.
+      - Vraag naar de werkorders (accu vervangen/gecontroleerd).
+    questions:
+      - Zijn alle terugroepacties voor de accu uitgevoerd? Is de accu vervangen? Mag de auto normaal extern laden?
+    test_drive:
+      - Laad de auto aan een paal en controleer dat laden normaal werkt.
+    sources:
+      - {title: "ElektrischeAuto.nl: Ford gaat accu's Kuga plug-in hybrid vervangen", url: "https://www.elektrischeauto.nl/nieuws/ford-gaat-accus-kuga-plug-in-hybrid-vervangen"}
+      - {title: "AVROTROS Radar: geld en reparatie voor je Ford Kuga-defect", url: "https://radar.avrotros.nl/artikel/zo-krijg-je-geld-en-een-reparatie-voor-je-ford-kuga-defect-61617"}
+      - {title: "Test-Aankoop: Ford Kuga PHEV terugroepactie", url: "https://www.test-aankoop.be/mobiliteit/auto-s/nieuws/ford-kuga-terugroepactie"}
+    reviewed: 2026-10-27

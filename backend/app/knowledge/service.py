@@ -146,6 +146,12 @@ def match_issue(f: dict, issue: dict, listing: Listing) -> str | None:
             uncertain = True
         elif listing.fuel not in fuels:
             return None
+    transmissions = issue.get("transmissions")
+    if transmissions:
+        if listing.transmission is None:
+            uncertain = True
+        elif listing.transmission not in transmissions:
+            return None
 
     engine = issue.get("engine")
     if engine:

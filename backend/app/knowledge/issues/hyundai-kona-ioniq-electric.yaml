@@ -1,0 +1,40 @@
+id: hyundai-kona-ioniq-electric
+title: Hyundai Kona Electric (2018–2023) en IONIQ Electric
+summary: >-
+  Na accubranden riep Hyundai wereldwijd Kona Electrics (en een deel van de IONIQ Electrics) terug die
+  tussen 2018 en 2020 zijn gebouwd; uiteindelijk werd bij de getroffen auto's de complete
+  hoogvoltage-accu vervangen. Controleer bij elke Kona Electric uit die bouwperiode of de terugroepactie is
+  uitgevoerd – Autozoeker toont de RDW-status per kenteken.
+applies_to:
+  - {make: hyundai, model: kona}
+  - {make: hyundai, model: ioniq}
+issues:
+  - id: kona-ev-battery-recall
+    title: Terugroepactie hoogvoltage-accu (brandrisico) – Kona Electric 2018–2020
+    severity: critical
+    likelihood: medium
+    category: accu
+    fuels: [elektrisch]
+    years: [2018, 2020]
+    summary: >-
+      Hyundai startte in 2020 een terugroepactie (software-update en accuvervanging) na accubranden; in
+      februari 2021 besloot Hyundai de hoogvoltage-accu van alle getroffen auto's (gebouwd 2018–2020)
+      wereldwijd te vervangen, ook bij een deel van de IONIQ Electric. De oorzaak (cellen van LG) is tussen
+      Hyundai en LG betwist.
+    symptoms:
+      - Meestal geen symptomen vooraf; daarom is de terugroepstatus cruciaal
+    fix:
+      type: recall
+      description: Accuvervanging (of eerst software-update) via de Hyundai-dealer; kosteloos.
+      rdw_recall_keywords: [accu, batterij, hoogspanning, hoogvolt, brand, kortsluiting, cel]
+    verify:
+      - Bekijk in het RDW-rapport of de terugroepactie 'Producent heeft herstel gemeld' toont.
+      - Vraag de werkorder van de accuvervanging; een nieuwe accu is een pluspunt.
+    questions:
+      - Is de hoogvoltage-accu in het kader van de terugroepactie vervangen? Mag ik de werkorder zien?
+    test_drive: []
+    sources:
+      - {title: "Fleet News: Hyundai recalls electric cars due to battery fire risk", url: "https://www.fleetnews.co.uk/news/manufacturer-news/2021/02/25/hyundai-recalls-electric-cars-due-to-battery-fire-risk"}
+      - {title: "Auto Express: Hyundai Kona Electric recalled over fire risk", url: "https://www.autoexpress.co.uk/electric-cars/353452/hyundai-kona-electric-recalled-over-fire-risk"}
+      - {title: "Autotrade.ie: first mass EV battery replacement", url: "https://www.autotrade.ie/index.php/hyundai-safety-recall-first-mass-ev-battery-replacement/56604"}
+    reviewed: 2026-10-27

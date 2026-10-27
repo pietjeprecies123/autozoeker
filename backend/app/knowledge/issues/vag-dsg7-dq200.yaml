@@ -1,0 +1,67 @@
+id: vag-dsg7-dq200
+title: DSG7 (DQ200) droge 7-traps DSG (Volkswagen, Škoda, SEAT, CUPRA, Audi)
+summary: >-
+  De 7-traps DSG met droge koppelingen (DQ200) zit achter de lichtere TSI/TDI-motoren (tot ca. 250 Nm).
+  Bekendste zwakte is de mechatronic-unit (de 'regelunit' van de bak); daarnaast kunnen de droge
+  koppelingen gaan trillen of slippen. Volgens reparatiebedrijven waren vroege exemplaren (tot ca. 2013)
+  het gevoeligst; deze bronnen zijn commercieel, dus de kosten zijn indicatief.
+applies_to:
+  - {make: volkswagen, model: polo}
+  - {make: volkswagen, model: golf}
+  - {make: volkswagen, model: t-roc}
+  - {make: volkswagen, model: t-cross}
+  - {make: volkswagen, model: taigo}
+  - {make: volkswagen, model: touran}
+  - {make: skoda, model: fabia}
+  - {make: skoda, model: octavia}
+  - {make: skoda, model: scala}
+  - {make: skoda, model: kamiq}
+  - {make: skoda, model: karoq}
+  - {make: seat, model: ibiza}
+  - {make: seat, model: leon}
+  - {make: seat, model: arona}
+  - {make: seat, model: ateca}
+  - {make: cupra, model: formentor}
+  - {make: audi, model: a1}
+  - {make: audi, model: a3}
+  - {make: audi, model: q2}
+issues:
+  - id: dq200-mechatronic
+    title: Mechatronic-unit of droge koppeling van de DSG7 defect
+    severity: high
+    likelihood: medium
+    category: transmissie
+    transmissions: [automaat]
+    engine:
+      keywords: ["dsg", "s tronic", "s-tronic", "dsg7", "7-dsg"]
+      exclude_keywords: ["2.0", "gti", "gtd", "gte", "4motion", "e-hybrid", "ehybrid", "iv", "tdi 150", "vrs", "cupra 300", "r-line 2.0"]
+    summary: >-
+      Bij een defecte mechatronic valt de auto terug in neutraal, weigert hij een versnelling of gaat hij
+      in noodloop. Slijtage van de droge koppelingen geeft schokken/trillen bij wegrijden, volgens een
+      bron vaak tussen 100.000 en 150.000 km. Een kapotte remlichtschakelaar of bedrading kan dezelfde
+      foutcode geven, dus eerst goed laten uitlezen.
+    symptoms:
+      - Versnellingsbak-waarschuwing of knipperende 'D'/'PRND'-indicatie
+      - Valt in neutraal of geen achteruit; noodloop
+      - Schokkerig wegrijden of schakelen bij lage snelheid; trillen bij optrekken
+    repair_cost_eur: [600, 1800]
+    fix:
+      type: none
+      description: >-
+        Geen algemene Europese terugroepactie gevonden. Reparatie: revisie/vervanging mechatronic
+        (circa €1.000–1.500 bij specialisten) of koppelingspakket (circa €600–1.500).
+    verify:
+      - Vraag naar facturen van eerdere mechatronic- of koppelingsreparaties en software-updates van de bak.
+      - Laat de bak uitlezen (VCDS/dealer) op opgeslagen foutcodes zoals P17BF, P189C, P0841, P1895, U0101.
+    questions:
+      - Is er ooit iets aan de DSG gedaan (mechatronic, koppeling, software-update)? Zijn daar facturen van?
+      - Heeft de bak ooit in de noodloop gestaan of een waarschuwing gegeven?
+    test_drive:
+      - Rijd stapvoets in file-tempo, trek een paar keer rustig op vanuit stilstand en parkeer achteruit.
+      - Let op schokken, trillen bij het wegrijden, haperend schakelen van 1 naar 2 en 2 naar 3.
+      - Na de rit: geen waarschuwingen op het dashboard?
+    sources:
+      - {title: "ECU Testing: DQ200/DSG7 mechatronic repair", url: "https://www.ecutesting.com/common-faults/volkswagen/volkswagen-golf-audi-a3-dsg-7-gearbox-problem/"}
+      - {title: "EngineScope: VW DSG DQ200", url: "https://enginescope.gr/engine/vw-dsg-dq200/?lang=en"}
+      - {title: "Actronics: VAG-foutcode 01315 bij DQ200", url: "https://www.actronics.co.uk/vag-fault-code-01315-dq200"}
+    reviewed: 2026-10-27

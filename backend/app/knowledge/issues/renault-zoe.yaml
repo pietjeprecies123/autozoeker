@@ -1,0 +1,40 @@
+id: renault-zoe
+title: Renault ZOE (2012–2024)
+summary: >-
+  Veel ZOE's zijn verkocht met een huuraccu: de accu is dan geen eigendom en de koper neemt een
+  huurcontract over (historisch circa €69–129 per maand, afhankelijk van versie en jaarkilometrage, plus
+  een aparte accuverzekering). Zulke auto's zijn goedkoper in aanschaf maar duurder in gebruik. Let ook op
+  of een oudere ZOE snel (DC) kan laden – niet alle versies hebben CCS.
+applies_to:
+  - {make: renault, model: zoe}
+issues:
+  - id: zoe-battery-lease
+    title: Huuraccu – contract, maandkosten en kilometerlimiet
+    severity: medium
+    likelihood: medium
+    category: accu
+    summary: >-
+      Bij een huuraccu betaal je maandelijks huur aan Mobilize (vroeger RCI) op basis van een
+      jaarkilometrage; meer kilometers kosten extra (historisch 5 cent per km). De accu moet apart verzekerd
+      worden. Vraag het lopende contract en de actuele tarieven, en of uitkopen van de accu mogelijk is.
+      Advertenties noemen het niet altijd duidelijk.
+    symptoms:
+      - Opvallend lage vraagprijs voor de leeftijd en kilometerstand
+      - Termen als 'huuraccu', 'batterijhuur' of 'accuhuur' in de advertentie
+    fix:
+      type: none
+      description: Contract overnemen, of (indien mogelijk) de accu uitkopen. Reken de huur mee in de maandkosten.
+    verify:
+      - Vraag het huurcontract (bedrag per maand, kilometerafspraak, looptijd) en de accuverzekering.
+      - Check bij Mobilize de actuele tarieven en overdraagbaarheid.
+    questions:
+      - Is de accu gekocht of gehuurd? Wat kost de huur per maand en voor hoeveel km per jaar?
+      - Kan de accu worden uitgekocht, en wat kost dat?
+      - Kan deze ZOE snelladen (DC/CCS)?
+    test_drive:
+      - Kijk naar de laadaansluiting: is er een CCS-snellaadaansluiting?
+    sources:
+      - {title: "TopGear NL: goedkoopste EV met 400 km actieradius (huuraccu)", url: "https://topgear.nl/autonieuws/de-goedkoopste-elektrische-auto-met-400-kilometer-actieradius-kost-nog-maar-6-000-euro/"}
+      - {title: "Autozine: Renault maakt prijzen ZOE 50 bekend (accuhuur)", url: "https://www.autozine.nl/renault/zoe/nieuws/renault-maakt-prijzen-zoe-50-bekend"}
+      - {title: "Renault: Algemene voorwaarden batterijhuur Z.E. (2020)", url: "https://cdn.group.renault.com/ren/nl/brochures-en-prijslijsten/andere-pdfs/Algemene_Voorwaarden_Batterijhuur_Renault_Z.E._-_januari_2020.pdf"}
+    reviewed: 2026-10-27

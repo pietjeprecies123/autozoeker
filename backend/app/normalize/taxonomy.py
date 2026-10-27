@@ -154,10 +154,12 @@ def match_vehicle(
         return None
     make = taxonomy[make_slug]
     found: tuple[ModelDef, str] | None = None
-    for text in (model_raw, title):
+    # The model field is matched as-is; in the title we strip the first make mention only, so a model
+    # that shares its name with the make ("MINI Mini", "smart #1") still matches.
+    for text, strip in ((model_raw, False), (title, True)):
         if not text:
             continue
-        cleaned = make._pattern.sub(" ", text) if make._pattern else text
+        cleaned = make._pattern.sub(" ", text, count=1) if (strip and make._pattern) else text
         found = _match_model(make, cleaned.strip())
         if found:
             break
