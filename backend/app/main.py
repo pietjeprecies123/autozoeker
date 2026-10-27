@@ -14,7 +14,7 @@ from sqlalchemy import select
 
 from app.api import listing_routes, misc_routes, personal_routes, search_routes
 from app.config import BACKEND_DIR, REPO_DIR, get_settings
-from app.db import init_db, session_scope
+from app.db import migrate, session_scope
 from app.models import Profile
 from app.state import STATE
 
@@ -58,7 +58,7 @@ def warm_up() -> None:
 async def lifespan(app: FastAPI):
     from app import scheduler
 
-    init_db()
+    migrate()
     ensure_profiles()
     threading.Thread(target=warm_up, daemon=True).start()
     scheduler.start()

@@ -22,10 +22,10 @@ def serve(host: str = "0.0.0.0", port: int = 8000, reload: bool = False):
 def seed_demo(n: int = 5000):
     """Load the demo dataset and train the valuation model."""
     from app.analysis import refresh
-    from app.db import init_db, session_scope
+    from app.db import migrate, session_scope
     from app.demo.seed import seed_demo as seed
 
-    init_db()
+    migrate()
     with session_scope() as session:
         added = seed(session, n=n)
     with session_scope() as session:
@@ -36,21 +36,21 @@ def seed_demo(n: int = 5000):
 @app.command()
 def crawl():
     """Run one crawl cycle now (sources → ingest → score → alerts)."""
-    from app.db import init_db
+    from app.db import migrate
     from app.scheduler import crawl_cycle
 
-    init_db()
+    migrate()
     typer.echo(json.dumps(crawl_cycle(), indent=2))
 
 
 @app.command()
 def retrain():
     """Retrain the valuation model and rescore all active listings."""
-    from app.db import init_db
+    from app.db import migrate
     from app.scheduler import nightly
     from app.valuation.model import get_model_instance
 
-    init_db()
+    migrate()
     nightly()
     typer.echo(json.dumps(get_model_instance().metrics, indent=2))
 
@@ -105,9 +105,9 @@ def capture(source: str, make: str = "volkswagen", model: str = "golf", out: Pat
 def research(make: str, model: str, generation: str | None = None, force: bool = False):
     """Research known issues for a model with Claude (needs ANTHROPIC_API_KEY)."""
     from app.ai.research import get_or_research
-    from app.db import init_db, session_scope
+    from app.db import migrate, session_scope
 
-    init_db()
+    migrate()
     with session_scope() as session:
         rec = get_or_research(session, make, model, generation, force=force)
         typer.echo(json.dumps(rec.result, indent=2, ensure_ascii=False))
