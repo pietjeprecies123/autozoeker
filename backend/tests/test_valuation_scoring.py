@@ -29,6 +29,17 @@ def test_value_decreases_with_km_and_age(seeded):
     assert later < base
 
 
+def test_km_effect_has_the_right_sign(seeded):
+    rows = seeded.scalars(select(Listing).where(Listing.km_effect_eur.is_not(None), Listing.expected_km.is_not(None),
+                                                Listing.mileage_km.is_not(None))).all()
+    assert len(rows) > 500
+    for r in rows:
+        if r.mileage_km < r.expected_km:
+            assert r.km_effect_eur >= 0, (r.id, r.mileage_km, r.expected_km, r.km_effect_eur)
+        elif r.mileage_km > r.expected_km:
+            assert r.km_effect_eur <= 0, (r.id, r.mileage_km, r.expected_km, r.km_effect_eur)
+
+
 def test_deal_scores_and_components_present(seeded):
     rows = seeded.scalars(select(Listing).where(Listing.status == "active").limit(200)).all()
     assert all(r.score_components for r in rows)

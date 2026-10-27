@@ -33,6 +33,7 @@ log = logging.getLogger(__name__)
 
 CAT_FEATURES = ["make", "make_model", "generation", "fuel", "transmission", "body", "segment"]
 NUM_FEATURES = ["age_months", "km", "power_kw", "battery_kwh", "n_options", "battery_lease", "trim_level"]
+MONOTONIC = {"age_months": -1, "km": -1}
 MIN_TRAIN_ROWS = 200
 DEFAULT_ANNUAL_KM = {"diesel": 21000, "elektrisch": 15000, "plugin_hybride": 16000, "hybride": 14500, "lpg": 19000}
 
@@ -124,8 +125,10 @@ class ValuationModel:
 
     def _new_gbm(self, loss: str = "squared_error", quantile: float | None = None) -> HistGradientBoostingRegressor:
         mask = [True] * len(CAT_FEATURES) + [False] * len(NUM_FEATURES)
+        # Value never rises with age or km; without this, noise can make a low-km car "worth less".
+        monotonic = [0] * len(CAT_FEATURES) + [MONOTONIC.get(f, 0) for f in NUM_FEATURES]
         kwargs = dict(max_iter=250, learning_rate=0.08, max_leaf_nodes=31, min_samples_leaf=12,
-                      l2_regularization=0.5, categorical_features=mask, random_state=7)
+                      l2_regularization=0.5, categorical_features=mask, monotonic_cst=monotonic, random_state=7)
         if quantile is not None:
             return HistGradientBoostingRegressor(loss="quantile", quantile=quantile, **kwargs)
         return HistGradientBoostingRegressor(loss=loss, **kwargs)

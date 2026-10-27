@@ -67,7 +67,7 @@ def compute(session: Session, listing: Listing, vehicle: Vehicle | None, ctx: di
 
     if listing.deal_score is not None and listing.deal_score > 0.25 and listing.valuation_confidence != "low":
         flags.append(_flag("price_too_low", "high", "Prijs ver onder marktwaarde",
-                           f"{int(listing.deal_score * 100)}% onder de geschatte marktwaarde. Een koopje kan, maar check extra goed "
+                           f"{round(listing.deal_score * 100)}% onder de geschatte marktwaarde. Een koopje kan, maar check extra goed "
                            "waarom: schade, import, huuraccu, of een nep-advertentie."))
 
     if listing.kenteken and vehicle is not None:
