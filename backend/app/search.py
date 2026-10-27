@@ -184,13 +184,22 @@ SORTS = {
 }
 
 
-def run_search(session: Session, req: SearchRequest, listing_ids: list[int] | None = None) -> list[Scored]:
-    profile = session.get(Profile, req.profile_id) if req.profile_id else None
+def effective_weights(profile: Profile | None, overrides: dict | None = None) -> dict[str, float]:
+    """Profile weights blended 50/50 with the weights learned from thumbs up/down, then request overrides.
+
+    Every place that shows a match score uses this, so a car scores the same in the list and on its page.
+    """
     weights = dict(profile.weights or {}) if profile else {}
     if profile and profile.learned_weights:
         for k, v in profile.learned_weights.items():
             weights[k] = 0.5 * weights.get(k, v) + 0.5 * v
-    weights.update(req.weights or {})
+    weights.update(overrides or {})
+    return weights
+
+
+def run_search(session: Session, req: SearchRequest, listing_ids: list[int] | None = None) -> list[Scored]:
+    profile = session.get(Profile, req.profile_id) if req.profile_id else None
+    weights = effective_weights(profile, req.weights)
     q = build_query(req.filters)
     if listing_ids is not None:
         q = q.where(Listing.id.in_(listing_ids))

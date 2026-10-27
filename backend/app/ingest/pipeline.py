@@ -183,6 +183,7 @@ def crawl(session: Session, adapter: SourceAdapter, query: SourceQuery) -> Inges
 
 BACKOFF_FIRST_MIN = 60
 BACKOFF_MAX_MIN = 24 * 60
+CONTROL_MAX_AGE_HOURS = 2  # the stale check's control advert must have been seen this recently
 
 
 def blocked_until(session: Session, source: str) -> datetime | None:
@@ -211,40 +212,66 @@ def confirm_stale(
 
     Searches stop after CRAWL_MAX_PAGES, so "not seen" alone doesn't mean sold. Watched cars go first;
     the rest wait for a later cycle. No advert (or 404/410) → removed; still online → a normal sighting.
+    A broken detail parser would make every car look sold, so an advert seen in this cycle must parse
+    first; otherwise nothing is removed.
     """
-    cutoff = utcnow() - timedelta(hours=max_age_hours)
+    now = utcnow()
     candidates = session.scalars(
         select(Listing)
-        .where(Listing.status == "active", Listing.source == adapter.name, Listing.last_seen_at < cutoff)
+        .where(Listing.status == "active", Listing.source == adapter.name,
+               Listing.last_seen_at < now - timedelta(hours=max_age_hours))
         .order_by(Listing.id.in_(select(WatchlistItem.listing_id)).desc(), Listing.last_seen_at)
         .limit(max_checks)
     ).all()
     result = IngestResult()
-    now = utcnow()
-    for listing in candidates:
-        try:
-            raw = adapter.detail(listing.url or listing.source_id)
-        except SourceBlocked as exc:
+    if not candidates:
+        return result
+    control = session.scalar(
+        select(Listing)
+        .where(Listing.status == "active", Listing.source == adapter.name,
+               Listing.last_seen_at >= now - timedelta(hours=CONTROL_MAX_AGE_HOURS))
+        .order_by(Listing.last_seen_at.desc())
+        .limit(1)
+    )
+    try:
+        state, _, error = _fetch_detail(adapter, control) if control else ("error", None, "no advert seen recently")
+        if state != "online":
+            reason = f"stale check skipped: control advert unreadable ({error or 'parsed as gone'})"
             session.add(CrawlRun(source=adapter.name, query_key="stale-check", started_at=now, finished_at=utcnow(),
-                                 status="blocked", error=str(exc)))
-            result.blocked = True
-            break
-        except httpx.HTTPStatusError as exc:
-            if exc.response.status_code not in (404, 410):
-                result.errors.append(f"{adapter.name}/{listing.source_id}: {exc}")
-                continue
-            raw = None
-        except Exception as exc:  # network trouble: try again next cycle
-            result.errors.append(f"{adapter.name}/{listing.source_id}: {exc}")
-            continue
-        if raw is None:
-            listing.status = "removed"
-            listing.removed_at = now
-            result.removed.append(listing.id)
-        else:
-            result.merge(ingest_many(session, [raw], now=now))
+                                 status="error", error=reason))
+            result.errors.append(reason)
+            return result
+        for listing in candidates:
+            state, raw, error = _fetch_detail(adapter, listing)
+            if state == "gone":
+                listing.status = "removed"
+                listing.removed_at = now
+                result.removed.append(listing.id)
+            elif state == "online":
+                result.merge(ingest_many(session, [raw], now=now))
+            else:  # network trouble: try again next cycle
+                result.errors.append(f"{adapter.name}/{listing.source_id}: {error}")
+    except SourceBlocked as exc:
+        session.add(CrawlRun(source=adapter.name, query_key="stale-check", started_at=now, finished_at=utcnow(),
+                             status="blocked", error=str(exc)))
+        result.blocked = True
     session.flush()
     return result
+
+
+def _fetch_detail(adapter: SourceAdapter, listing: Listing) -> tuple[str, RawListing | None, str]:
+    """('online', raw, '') | ('gone', None, '') | ('error', None, message). SourceBlocked propagates."""
+    try:
+        raw = adapter.detail(listing.url or listing.source_id)
+    except SourceBlocked:
+        raise
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code in (404, 410):
+            return "gone", None, ""
+        return "error", None, str(exc)
+    except Exception as exc:
+        return "error", None, str(exc)
+    return ("online", raw, "") if raw is not None else ("gone", None, "")
 
 
 def queries_for_crawl(session: Session) -> list[SourceQuery]:

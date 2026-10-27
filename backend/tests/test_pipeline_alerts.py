@@ -77,18 +77,33 @@ def test_confirm_stale_checks_the_advert_before_removing(session):
         listing.last_seen_at = old
     session.add(WatchlistItem(listing_id=watched.id))
     session.flush()
-    adapter = FakeAdapter(online={"alive", "watched"})
+    adapter = FakeAdapter(online={"alive", "watched", "fresh"})
     res = confirm_stale(session, adapter, max_age_hours=72)
-    assert adapter.checked[0].endswith("/watched")  # watched cars are checked first
-    assert "https://x/fresh" not in adapter.checked
+    assert adapter.checked[0].endswith("/fresh")  # control advert seen this cycle must parse first
+    assert adapter.checked[1].endswith("/watched")  # then watched cars
     assert res.removed == [gone.id] and gone.status == "removed"
     assert alive.status == "active" and alive.last_seen_at > old
     assert watched.status == "active"
 
 
+def test_confirm_stale_removes_nothing_when_the_parser_is_broken(session):
+    stale, _ = upsert(session, raw(sid="stale", plate=None), enrich=False)
+    upsert(session, raw(sid="fresh", plate=None), enrich=False)
+    stale.last_seen_at = utcnow() - timedelta(days=5)
+    session.flush()
+    res = confirm_stale(session, FakeAdapter(online=()), max_age_hours=72)  # every detail page "unreadable"
+    assert res.removed == [] and stale.status == "active"
+    assert res.errors and "control advert" in res.errors[0]
+    # no recently seen advert to verify against: also skip
+    session.delete(session.scalar(select(Listing).where(Listing.source_id == "fresh")))
+    session.flush()
+    assert confirm_stale(session, FakeAdapter(online={"stale"}), max_age_hours=72).removed == []
+
+
 def test_blocked_source_backs_off_and_keeps_listings(session):
     listing, _ = upsert(session, raw(sid="kept", plate=None), enrich=False)
     listing.last_seen_at = utcnow() - timedelta(days=5)
+    upsert(session, raw(sid="fresh", plate=None), enrich=False)
     adapter = FakeAdapter(blocked=True)
     assert crawl(session, adapter, SourceQuery(make="toyota")).blocked
     first = blocked_until(session, "autoscout24")
@@ -163,3 +178,22 @@ def test_watchlist_alert_and_digest(seeded):
     assert engine.send_digests(seeded, publisher=lambda p: digests.append(p) or True) >= 1
     assert any("nieuwe matches" in d["title"] for d in digests)
     assert not seeded.scalars(select(AlertSent).where(AlertSent.delivery == "digest", AlertSent.profile_id == profile.id)).all()
+
+
+def test_watched_car_matching_a_saved_search_alerts_once(seeded):
+    profile = Profile(name="Dubbel", ntfy_topic="t3")
+    seeded.add(profile)
+    seeded.flush()
+    watched = select(WatchlistItem.listing_id)
+    listing = seeded.scalars(select(Listing).where(Listing.status == "active", Listing.id.not_in(watched))).first()
+    seeded.add(WatchlistItem(listing_id=listing.id, added_by=profile.id))
+    seeded.add(SavedSearch(profile_id=profile.id, name="Zelfde auto", min_match=0, alert_mode="instant",
+                           filters={"models": [f"{listing.make}/{listing.model}"]}, price_drop_eur=1))
+    listing.price_eur -= 500
+    seeded.add(PriceHistory(listing_id=listing.id, price_eur=listing.price_eur))
+    seeded.flush()
+    sent: list[dict] = []
+    alerts = engine.process(seeded, IngestResult(price_changed=[listing.id]), publisher=lambda p: sent.append(p) or True)
+    mine = [a for a in alerts if a.profile_id == profile.id and a.listing_id == listing.id]
+    assert len(mine) == 1 and mine[0].saved_search_id is not None
+    assert len([p for p in sent if p["topic"] == "t3"]) == 1

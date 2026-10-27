@@ -73,11 +73,12 @@ def _payload(profile: Profile, listing: Listing, kind: str, match: int | None, s
 def _record(session: Session, profile: Profile, listing: Listing, kind: str, match: int | None,
             search: SavedSearch | None, publisher: Publisher, prev: int | None = None) -> AlertSent | None:
     if search is None:
-        # NULL saved_search_id is not covered by the unique constraint (NULLs are distinct), check by hand
+        # Watchlist alert. NULL saved_search_id is not covered by the unique constraint, so check by hand; also
+        # skip it when a saved search already alerted this profile about the same car, event and price.
         exists = session.scalar(select(AlertSent.id).where(
-            AlertSent.profile_id == profile.id, AlertSent.saved_search_id.is_(None), AlertSent.listing_id == listing.id,
+            AlertSent.profile_id == profile.id, AlertSent.listing_id == listing.id,
             AlertSent.kind == kind, AlertSent.price_eur == listing.price_eur,
-        ))
+        ).limit(1))
         if exists:
             return None
     alert = AlertSent(

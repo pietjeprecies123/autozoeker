@@ -355,7 +355,10 @@ def set_model_instance(model: ValuationModel | None) -> None:
 
 
 def train(session: Session, persist: bool = True) -> ValuationModel:
-    listings = list(session.scalars(select(Listing).where(Listing.price_eur.is_not(None))))
+    q = select(Listing).where(Listing.price_eur.is_not(None))
+    if not get_settings().demo_mode:
+        q = q.where(Listing.is_demo.is_(False))  # generated demo prices must not value real cars
+    listings = list(session.scalars(q))
     model = ValuationModel().fit(listings)
     set_model_instance(model)
     if persist:

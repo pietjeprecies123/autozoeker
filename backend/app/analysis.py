@@ -52,7 +52,7 @@ def refresh(session: Session, ids: list[int] | None = None, retrain: bool = Fals
                 continue
             comps = list(session.scalars(select(Listing).where(Listing.make == make, Listing.model == mdl).limit(400)))
             for x in group:
-                v = hedonic_or_comparables(x, comps)
+                v = hedonic_or_comparables(x, [c for c in comps if c.is_demo == x.is_demo])
                 if v:
                     v.expected_km = model.expected_km(x)
                     valuations[x.id] = v

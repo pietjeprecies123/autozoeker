@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
@@ -18,7 +18,7 @@ from app.knowledge.service import issues_for, model_overview
 from app.models import Feedback, Listing, PriceHistory, Vehicle, WatchlistItem
 from app.scoring.components import composite
 from app.scoring.negotiation import advise
-from app.search import home_location
+from app.search import effective_weights, home_location
 from app.sources.registry import adapter_for_url
 from app.tco.tco import TcoInput
 from app.tco.tco import compute as tco_compute
@@ -32,7 +32,8 @@ def _comparables(session: Session, listing: Listing, k: int = 12) -> list[Listin
         return []
     pool = list(session.scalars(
         select(Listing).options(selectinload(Listing.prices))
-        .where(Listing.make == listing.make, Listing.model == listing.model, Listing.id != listing.id)
+        .where(Listing.make == listing.make, Listing.model == listing.model, Listing.id != listing.id,
+               Listing.is_demo == listing.is_demo)
         .limit(1500)
     ))
     return nearest(listing, pool, k=k)
@@ -54,7 +55,7 @@ def listing_detail(listing_id: int, profile_id: int | None = None, session: Sess
         refresh(session, [listing.id])
     distance = _distance(session, listing, profile_id)
     profile = get_profile(session, profile_id) if profile_id else None
-    match = composite(listing.score_components or {}, profile.weights if profile else None, distance)
+    match = composite(listing.score_components or {}, effective_weights(profile), distance)
     issues = issues_for(listing, vehicle)
     comps = _comparables(session, listing)
     model = ensure_model(session)
@@ -130,7 +131,7 @@ def listing_feedback(listing_id: int, body: FeedbackIn, session: Session = DB):
 class CompareIn(BaseModel):
     ids: list[int]
     profile_id: int | None = None
-    km_per_year: int = 13000
+    km_per_year: int = Field(13000, ge=0, le=100_000)
 
 
 @router.post("/compare")
@@ -152,7 +153,7 @@ def compare(body: CompareIn, session: Session = DB):
 
         tco = tco_compute(listing, vehicle, TcoInput(km_per_year=body.km_per_year), postcode, resale)
         c = card(listing, vehicle, distance,
-                 composite(listing.score_components or {}, profile.weights if profile else None, distance))
+                 composite(listing.score_components or {}, effective_weights(profile), distance))
         c.update({
             "vehicle": vehicle_to_dict(vehicle),
             "issues": [m.to_dict() for m in issues],
