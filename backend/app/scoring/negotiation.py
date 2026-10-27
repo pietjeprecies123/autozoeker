@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from app.models import Listing, Vehicle
-from app.util import euro, today, utcnow
+from app.util import euro, price_drops, today, utcnow
 
 
 def advise(listing: Listing, vehicle: Vehicle | None, issue_matches: list, comparables: list[Listing]) -> dict | None:
@@ -31,7 +31,7 @@ def advise(listing: Listing, vehicle: Vehicle | None, issue_matches: list, compa
         leverage += 0.02
         args.append(f"De auto staat al {days} dagen online.")
 
-    drops = max(0, len(listing.prices or []) - 1)
+    drops = price_drops(listing.prices)
     if drops:
         leverage += min(0.03, 0.01 * drops)
         args.append(f"De prijs is al {drops}× verlaagd: de verkoper wil verkopen.")

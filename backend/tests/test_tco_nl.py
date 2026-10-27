@@ -1,5 +1,7 @@
 from datetime import date
 
+import pytest
+
 from app.ai.nl_search import rule_based
 from app.models import Listing, Vehicle
 from app.scoring.negotiation import advise
@@ -51,3 +53,29 @@ def test_rule_based_nl_search():
     assert f.models == ["toyota/corolla"] and f.km_max == 100000 and f.year_min == 2019 and f.price_max == 22500
     f, _ = rule_based("golf variant diesel tot 12000 euro")
     assert f.models == ["volkswagen/golf"] and f.fuels == ["diesel"] and f.price_max == 12000
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("golf onder 15k km", {"km_max": 15000, "price_max": None}),
+    ("onder 15k km en max 20k", {"km_max": 15000, "price_max": 20000}),
+    ("suv tot 1500 kg trekgewicht", {"towing_min": 1500, "price_max": None}),
+    ("auto tot 2015 bouwjaar", {"year_max": 2015, "price_max": None}),
+    ("tot bouwjaar 2015, max 8k", {"year_max": 2015, "price_max": 8000}),
+    ("auto tot 2000 euro", {"price_max": 2000}),
+    ("7-zits onder 20 duizend", {"price_max": 20000, "seats_min": 7}),
+    ("geen automaat", {"transmissions": ["handgeschakeld"]}),
+    ("geen trekhaak, wel navigatie", {"options": ["navigatie"]}),
+    ("zuinige auto, geen plug-in", {"fuels": ["hybride", "elektrisch"]}),
+    ("plug-in hybride suv vanaf € 20.000", {"fuels": ["plugin_hybride"], "price_min": 20000}),
+])
+def test_rule_based_amounts_units_and_negation(text, expected):
+    f, _ = rule_based(text)
+    for key, value in expected.items():
+        assert getattr(f, key) == value, (text, key, getattr(f, key))
+
+
+def test_rule_based_excluded_fuel():
+    f, notes = rule_based("kleine stadsauto, geen diesel")
+    assert "diesel" not in f.fuels and {"benzine", "hybride", "elektrisch"} <= set(f.fuels)
+    assert any("Geen diesel" in n for n in notes)
+

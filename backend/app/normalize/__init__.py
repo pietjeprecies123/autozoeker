@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import re
 
 from app.normalize import kenteken as kenteken_mod
 from app.normalize.fields import (
@@ -17,6 +18,7 @@ from app.normalize.fields import (
 )
 from app.normalize.taxonomy import match_vehicle
 from app.sources.base import RawListing
+from app.util import negated
 
 
 def normalize_raw(raw: RawListing) -> dict:
@@ -60,7 +62,8 @@ def normalize_raw(raw: RawListing) -> dict:
         "options": options,
         "seller_type": raw.seller_type,
         "seller_name": raw.seller_name,
-        "seller_bovag": raw.seller_bovag or "bovag" in (raw.description or "").lower(),
+        # private ads often say "onderhouden bij BOVAG-garage"; only a dealer can be a BOVAG member
+        "seller_bovag": bool(raw.seller_bovag) or (raw.seller_type == "dealer" and _mentions_bovag(raw.description)),
         "warranty_months": raw.warranty_months,
         "postcode": (raw.postcode or "")[:4] or None,
         "city": raw.city,
@@ -73,6 +76,11 @@ def normalize_raw(raw: RawListing) -> dict:
     }
     fields["fingerprint"] = fingerprint(fields)
     return fields
+
+
+def _mentions_bovag(text: str | None) -> bool:
+    t = (text or "").lower()
+    return any(not negated(t, m.start()) for m in re.finditer(r"bovag", t))
 
 
 def fingerprint(f: dict) -> str | None:

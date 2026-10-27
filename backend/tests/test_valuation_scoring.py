@@ -1,11 +1,13 @@
 import copy
 
+import pytest
 from sqlalchemy import select
 
 from app.models import Listing
 from app.scoring.components import composite, km_component, normalize_weights
-from app.scoring.redflags import PHRASES
+from app.scoring.redflags import PHRASES, compute
 from app.search import pareto_frontier
+from app.util import price_drops
 from app.valuation.model import get_model_instance
 
 
@@ -66,9 +68,24 @@ def test_km_component():
     assert low > high and ratio == 2.5
 
 
-def test_redflag_phrases_do_not_fire_on_negations():
-    import re
+@pytest.mark.parametrize("text,expected", [
+    ("Auto is schadevrij en heeft geen schade", set()),
+    ("Lichte schade aan bumper", {"damage"}),
+    ("Geen export!", set()),
+    ("Niet voor export of handel", set()),
+    ("Exportprijs, zo meenemen", {"export", "as_is"}),
+    ("Rijdt niet alleen zuinig maar ook comfortabel", set()),
+    ("Motor loopt niet onrustig", set()),
+    ("Start niet altijd goed", {"not_running"}),
+    ("Accu gekocht, geen huuraccu", set()),
+    ("Inclusief huuraccu", {"battery_lease"}),
+])
+def test_redflag_phrases_respect_negation(text, expected):
+    listing = Listing(title="Renault Zoe", description=text, prices=[])
+    codes = {f["code"] for f in compute(None, listing, None, {"private_counts": {}, "removed_by_plate": {}})}
+    assert codes & {p[1] for p in PHRASES} == expected
 
-    damage = next(p for p in PHRASES if p[1] == "damage")[0]
-    assert re.search(damage, "auto is schadevrij en heeft geen schade")is None
-    assert re.search(damage, "lichte schade aan bumper")
+
+def test_price_drops_ignore_increases():
+    assert price_drops([15000, 15500, 15000, 14500]) == 2
+    assert price_drops([10000]) == 0 and price_drops(None) == 0

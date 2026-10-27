@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.models import Listing, Vehicle
 from app.normalize.taxonomy import find_make
-from app.util import age_in_months, today, utcnow
+from app.util import age_in_months, negated, price_drops, today, utcnow
 
 SEVERITY_PENALTY = {"high": 0.08, "medium": 0.03, "low": 0.01, "info": 0.0}
 
@@ -19,10 +19,11 @@ PHRASES: list[tuple[str, str, str, str]] = [
     (r"handelsprijs|handelaarsprijs|meeneemprijs", "trade_price", "medium", "Handelsprijs: meestal zonder garantie en 'zoals hij is'."),
     (r"zo meenemen|zoals (hij|ie) is|voor de handel|opknapper", "as_is", "medium", "Verkocht zoals hij is: reken op reparatiekosten."),
     (r"geen garantie", "no_warranty", "low", "Expliciet geen garantie."),
-    (r"start niet|rijdt niet|loopt niet|motor (defect|kapot)|motorschade|koppakking", "not_running", "high", "Technisch defect genoemd."),
+    (r"start niet|rijdt niet(?! (alleen|enkel))|loopt niet(?! (alleen|enkel|onrustig|warm))|motor (defect|kapot)|motorschade|koppakking",
+     "not_running", "high", "Technisch defect genoemd."),
     (r"tikkend geluid|tikt|rammel|maakt geluid|lekt olie|olieverbruik", "noise", "medium", "Geluid of lekkage genoemd: laat het vooraf keuren."),
     (r"versnellingsbak (defect|maakt|slaat)|schakelt (slecht|hard)|koppeling (slipt|versleten)", "gearbox", "high", "Problemen met versnellingsbak/koppeling genoemd."),
-    (r"(?<!geen )(?<!zonder )\bschade\b|schadeauto|hagelschade|aanrijdingsschade", "damage", "medium", "Schade genoemd: vraag foto's en herstelfacturen."),
+    (r"\bschade\b|schadeauto|hagelschade|aanrijdingsschade", "damage", "medium", "Schade genoemd: vraag foto's en herstelfacturen."),
     (r"huuraccu|batterijhuur|accuhuur|batterij ?huur|battery lease", "battery_lease", "medium", "Huuraccu: de accu is geen eigendom; vraag het huurcontract en de maandkosten."),
     (r"western union|alleen whatsapp|auto staat in (het )?buitenland|verzending via|aanbetaling vooraf", "scam_pattern", "high", "Patroon dat vaak bij oplichting hoort. Nooit vooraf betalen."),
     (r"\bmarge\b", "margin", "info", "Marge-auto (geen btw verrekenbaar) – alleen relevant voor zakelijke kopers."),
@@ -114,7 +115,8 @@ def compute(session: Session, listing: Listing, vehicle: Vehicle | None, ctx: di
                                        f"Op {vehicle.apk_expiry.isoformat()}: vraag om nieuwe APK bij aflevering."))
 
     for pattern, code, severity, detail in PHRASES:
-        if re.search(pattern, desc):
+        # "geen export", "niet voor export", "geen enkele schade" say the opposite
+        if any(not negated(desc, m.start()) for m in re.finditer(pattern, desc)):
             if code == "battery_lease" and (listing.extra or {}).get("battery_lease") is False:
                 continue
             title = {
@@ -144,7 +146,7 @@ def compute(session: Session, listing: Listing, vehicle: Vehicle | None, ctx: di
     if days_online >= 45 and listing.status == "active":
         flags.append(_flag("long_on_market", "info", f"{days_online} dagen online",
                            "Lang te koop: er is waarschijnlijk onderhandelingsruimte."))
-    drops = max(0, len(listing.prices) - 1) if listing.prices else 0
+    drops = price_drops(listing.prices)
     if drops >= 2:
         flags.append(_flag("price_drops", "info", f"{drops}× in prijs verlaagd", "Verkoper wil van de auto af."))
 

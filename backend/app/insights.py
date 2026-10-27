@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.config import get_settings
 from app.models import Listing
-from app.util import age_in_months, utcnow
+from app.util import age_in_months, price_drops, utcnow
 
 
 def _pct(values: list[float], q: float) -> float | None:
@@ -93,7 +93,7 @@ def model_insights(session: Session, make: str, model: str | None = None, fuel: 
         supply.append({"week": t.date().isoformat(), "count": n})
 
     days_to_sale = [(x.removed_at - x.first_seen_at).days for x in sold]
-    with_drop = sum(1 for x in active if len(x.prices or []) > 1)
+    with_drop = sum(1 for x in active if price_drops(x.prices))
     deals = sorted(
         [x for x in active if x.deal_score is not None and x.valuation_confidence != "low"
          and not any(f.get("severity") == "high" for f in (x.red_flags or []))],

@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import unicodedata
 from datetime import UTC, date, datetime
+from itertools import pairwise
 
 
 def utcnow() -> datetime:
@@ -39,7 +40,10 @@ def parse_int(value) -> int | None:
         return value
     if isinstance(value, float):
         return int(round(value))
-    s = str(value)
+    s = str(value).strip()
+    # a plain decimal number ("15950.00", "435.0"); three digits after a dot are thousands ("15.950")
+    if re.fullmatch(r"\d+\.\d{1,2}", s):
+        return int(round(float(s)))
     # strip decimal part written as ',-' or ',00'
     s = re.sub(r",(-|\d{1,2})(?!\d)", "", s)
     digits = re.sub(r"[^\d]", "", s)
@@ -92,3 +96,20 @@ def km(value: int | float | None) -> str:
 
 def clamp(x: float, lo: float = 0.0, hi: float = 1.0) -> float:
     return max(lo, min(hi, x))
+
+
+_NEGATION = re.compile(
+    r"\b(?:geen|zonder|niet voor|niet|nooit)\s+(?:(?:enkele|echte|grote|zichtbare)\s+)?"
+    r"(?:[\w-]+\s*(?:,|of|en|noch)\s+)?$"
+)
+
+
+def negated(text: str, start: int) -> bool:
+    """True when the word at `start` is negated: 'geen schade', 'niet voor export', 'geen diesel of lpg'."""
+    return bool(_NEGATION.search(text[max(0, start - 40):start]))
+
+
+def price_drops(prices) -> int:
+    """Number of reductions in a chronological price history (PriceHistory rows or plain prices)."""
+    values = [getattr(p, "price_eur", p) for p in prices or []]
+    return sum(1 for a, b in pairwise(values) if a and b and b < a)

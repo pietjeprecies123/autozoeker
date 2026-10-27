@@ -11,9 +11,10 @@ import re
 
 from app.ai.client import AiRefused, get_client, request_kwargs, text_of
 from app.config import get_settings
-from app.normalize.fields import OPTION_PATTERNS
+from app.normalize.fields import FUELS, OPTION_PATTERNS
 from app.normalize.taxonomy import _match_model, find_make, load_taxonomy
 from app.search import SearchFilters
+from app.util import negated
 
 
 def _money(s: str) -> int:
@@ -29,25 +30,45 @@ def _money(s: str) -> int:
     return int(value * mult)
 
 
+# A number with an optional thousands word and unit: "15k", "20 duizend", "€12.500", "100.000 km", "1500 kg"
+_AMOUNT = (r"(?P<num>\d[\d.,]*(?<![.,]))(?![\d.,])(?P<mult>\s*(?:k\b|duizend))?(?:\s*(?:euro|eur)\b)?"
+           r"(?P<unit>\s*(?:km|kilometer|kg|kilo|jaar|kw|pk|bouwjaar|zits|persoons)\b)?")
+
+
+def _first_amount(t: str, prefix: str, units: tuple[str, ...] = ()) -> int | None:
+    """First amount after `prefix` with one of `units` (no units = a price, i.e. no unit at all)."""
+    for m in re.finditer(prefix + r"\s*(?:de\s*)?€?\s*" + _AMOUNT, t):
+        unit = (m.group("unit") or "").strip()
+        if (unit in units) if units else not unit:
+            return _money(m.group("num") + (m.group("mult") or ""))
+    return None
+
+
+def _said(pattern: str, t: str) -> tuple[bool, bool]:
+    """(asked for, ruled out): 'geen diesel' rules diesel out instead of asking for it."""
+    asked = ruled_out = False
+    for m in re.finditer(pattern, t):
+        if negated(t, m.start()):
+            ruled_out = True
+        else:
+            asked = True
+    return asked, ruled_out
+
+
 def rule_based(text: str) -> tuple[SearchFilters, list[str]]:
     t = text.lower()
     f = SearchFilters()
     notes: list[str] = []
 
-    amount = r"(\d[\d.,]*(?<![.,])(?![\d.,])\s*(?:k(?!m)|duizend)?)"
-    m = re.search(r"(?:onder|max(?:imaal)?|tot|<|beneden|hooguit|budget(?: van)?)\s*(?:de\s*)?€?\s*" + amount
-                  + r"(?:\s*(?:euro|eur))?(?!\s*(?:km|kilometer|kg|jaar|kw|pk))", t)
-    if m:
-        f.price_max = _money(m.group(1))
-    m = re.search(r"(?:vanaf|boven|min(?:imaal)?)\s*€\s*" + amount, t)
-    if m:
-        f.price_min = _money(m.group(1))
-    m = re.search(r"(?:onder|max(?:imaal)?|tot|minder dan)\s*" + amount + r"\s*(?:km|kilometer)", t)
-    if m:
-        f.km_max = _money(m.group(1))
+    f.price_max = _first_amount(t, r"(?:onder|max(?:imaal)?|tot|<|beneden|hooguit|budget(?: van)?)")
+    f.price_min = _first_amount(t, r"(?:vanaf|boven|min(?:imaal)?)\s*€")
+    f.km_max = _first_amount(t, r"(?:onder|max(?:imaal)?|tot|minder dan)", ("km", "kilometer"))
     m = re.search(r"(?:vanaf|na|nieuwer dan|jonger dan)\s*(?:bouwjaar\s*)?(20\d\d|19\d\d)", t)
     if m:
         f.year_min = int(m.group(1))
+    m = re.search(r"(?:tot|t/m|max(?:imaal)?)\s*(?:bouwjaar\s*(20\d\d|19\d\d)|(20\d\d|19\d\d)\s*bouwjaar)", t)
+    if m:
+        f.year_max = int(m.group(1) or m.group(2))
     m = re.search(r"(?:niet ouder dan|max(?:imaal)?)\s*(\d{1,2})\s*jaar", t)
     if m:
         from app.util import today
@@ -66,34 +87,44 @@ def rule_based(text: str) -> tuple[SearchFilters, list[str]]:
     if m:
         f.max_distance_km = int(m.group(1))
 
-    fuels = []
-    if re.search(r"plug[\s-]?in|phev", t):
-        fuels.append("plugin_hybride")
-    elif re.search(r"hybride|hybrid", t):
-        fuels.append("hybride")
-    if re.search(r"elektrisch|\bev\b|\bbev\b|stekker", t):
-        fuels.append("elektrisch")
-    if "diesel" in t:
-        fuels.append("diesel")
-    if re.search(r"benzine", t):
-        fuels.append("benzine")
-    if "lpg" in t:
-        fuels.append("lpg")
-    if re.search(r"zuinig", t) and not fuels:
-        fuels = ["hybride", "elektrisch", "plugin_hybride"]
+    wanted: list[str] = []
+    excluded: list[str] = []
+    # "plug-in hybride" is a plug-in, not also a plain hybrid
+    without_plugin = re.sub(r"plug[\s-]?in[\s-]*(?:hybride|hybrid)?|phev", " ", t)
+    for fuel, pattern, text_ in (
+        ("plugin_hybride", r"plug[\s-]?in|phev", t),
+        ("hybride", r"hybride|hybrid", without_plugin),
+        ("elektrisch", r"elektrisch|\bev\b|\bbev\b|stekker", t),
+        ("diesel", r"diesel", t),
+        ("benzine", r"benzine", t),
+        ("lpg", r"\blpg\b", t),
+    ):
+        asked, ruled_out = _said(pattern, text_)
+        if asked:
+            wanted.append(fuel)
+        elif ruled_out:
+            excluded.append(fuel)
+    if wanted:
+        f.fuels = wanted
+    elif re.search(r"zuinig", t):
+        f.fuels = [x for x in ("hybride", "elektrisch", "plugin_hybride") if x not in excluded]
         notes.append("Zuinig → hybride, plug-in of elektrisch")
-    f.fuels = fuels
+    elif excluded:
+        f.fuels = [x for x in FUELS if x not in excluded]
+        notes.append("Geen " + " of ".join(excluded) + " → alle andere brandstoffen")
 
-    if re.search(r"automaat|automatisch|\bdsg\b|\bcvt\b", t):
+    auto_asked, auto_out = _said(r"automaat|automatisch|\bdsg\b|\bcvt\b", t)
+    manual_asked, manual_out = _said(r"handgeschakeld|handbak|schakel", t)
+    if auto_asked or (manual_out and not manual_asked):
         f.transmissions = ["automaat"]
-    elif re.search(r"handgeschakeld|handbak|schakel", t):
+    elif manual_asked or auto_out:
         f.transmissions = ["handgeschakeld"]
 
     bodies = []
     for word, body in (("stationwagen", "stationwagen"), ("station", "stationwagen"), ("combi", "stationwagen"),
                        ("suv", "suv"), ("crossover", "suv"), ("hatchback", "hatchback"), ("sedan", "sedan"),
                        ("mpv", "mpv"), ("cabrio", "cabrio"), ("coup", "coupe")):
-        if word in t and body not in bodies:
+        if _said(re.escape(word), t)[0] and body not in bodies:
             bodies.append(body)
     if re.search(r"gezin|kinderen|kinderwagen", t) and not bodies:
         bodies = ["stationwagen", "suv", "mpv"]
@@ -106,17 +137,17 @@ def rule_based(text: str) -> tuple[SearchFilters, list[str]]:
         bodies = ["hatchback"]
     f.bodies = bodies
 
-    f.options = [opt for opt, pat in OPTION_PATTERNS.items() if re.search(pat, t) and opt != "trekhaak_afneembaar"]
+    f.options = [opt for opt, pat in OPTION_PATTERNS.items() if _said(pat, t)[0] and opt != "trekhaak_afneembaar"]
     if "trekhaak" in f.options and f.towing_min is None and re.search(r"caravan|aanhang", t):
         f.towing_min = 1200
 
-    if re.search(r"bovag", t):
+    if _said(r"bovag", t)[0]:
         f.bovag_only = True
-    if re.search(r"garantie", t):
+    if _said(r"garantie", t)[0]:
         f.warranty_only = True
-    if re.search(r"dealer", t):
+    if _said(r"dealer", t)[0]:
         f.seller_types = ["dealer"]
-    elif re.search(r"particulier", t):
+    elif _said(r"particulier", t)[0]:
         f.seller_types = ["private"]
     if re.search(r"geen import", t):
         f.hide_import = True

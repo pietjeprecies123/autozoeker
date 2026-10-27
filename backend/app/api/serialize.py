@@ -8,7 +8,7 @@ from app.normalize.kenteken import format_plate
 from app.normalize.taxonomy import generation_name, get_model, load_taxonomy
 from app.scoring.components import composite
 from app.search import Scored
-from app.util import utcnow
+from app.util import price_drops, utcnow
 
 SOURCE_LABELS = {"autoscout24": "AutoScout24", "marktplaats": "Marktplaats", "gaspedaal": "Gaspedaal",
                  "demo": "DEMO", "manual": "Handmatig"}
@@ -58,7 +58,7 @@ def card(listing: Listing, vehicle: Vehicle | None = None, distance_km: float | 
         "price_eur": listing.price_eur,
         "price_type": listing.price_type,
         "first_price_eur": first_price,
-        "price_drops": max(0, len(prices) - 1),
+        "price_drops": price_drops(prices),
         "fuel": listing.fuel,
         "fuel_label": FUEL_LABELS.get(listing.fuel or "", listing.fuel),
         "transmission": listing.transmission,

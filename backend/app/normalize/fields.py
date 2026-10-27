@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import re
 
+from app.util import negated
+
 FUELS = ["benzine", "diesel", "elektrisch", "hybride", "plugin_hybride", "lpg", "cng", "waterstof"]
 FUEL_LABELS = {
     "benzine": "Benzine",
@@ -79,7 +81,7 @@ def norm_body(raw: str | None, text: str = "") -> str | None:
     if not t.strip():
         return None
     rules = [
-        ("stationwagen", r"station|combi|estate|touring|variant|sportswagen|\bsw\b|avant|sports tourer|break|kombi|wagon|shooting brake|sportstourer|\bst\b"),
+        ("stationwagen", r"station|combi|estate|touring|variant|sportswagen|\bsw\b|avant|sports tourer|break|kombi|wagon|shooting brake|sportstourer"),
         ("suv", r"\bsuv\b|terrein|crossover|offroad|off-road|4x4"),
         ("mpv", r"\bmpv\b|monovolume|ruimtewagen|people carrier"),
         ("cabrio", r"cabrio|convertible|roadster|spider|spyder"),
@@ -169,19 +171,27 @@ OPTION_LABELS = {
 
 def extract_options(*texts: str | None) -> list[str]:
     blob = " ".join(t for t in texts if t).lower()
-    found = [opt for opt, pat in OPTION_PATTERNS.items() if re.search(pat, blob)]
+    found = [opt for opt, pat in OPTION_PATTERNS.items()
+             if any(not negated(blob, m.start()) for m in re.finditer(pat, blob))]
     if "trekhaak_afneembaar" in found and "trekhaak" not in found:
         found.append("trekhaak")
     return sorted(set(found))
+
+
+_CHARGE_AFTER = re.compile(r"\s*(?:boord)?(?:lader|laden|laadvermogen|ac|dc)\b")
+_CHARGE_BEFORE = re.compile(r"(?:snellad\w*|laadvermogen|\bac|\bdc)\s+(?:tot\s+|van\s+|max\.?\s+)?$")
 
 
 def extract_power_kw(text: str | None) -> int | None:
     if not text:
         return None
     t = text.lower()
-    m = re.search(r"(\d{2,3})\s?kw\b", t)
-    if m:
-        return int(m.group(1))
+    for m in re.finditer(r"(\d{2,3})\s?kw\b", t):
+        # skip charging power: "11kW lader", "snelladen tot 100 kW", "DC 150 kW"
+        if _CHARGE_AFTER.match(t, m.end()) or _CHARGE_BEFORE.search(t[max(0, m.start() - 20):m.start()]):
+            continue
+        if int(m.group(1)) >= 30:
+            return int(m.group(1))
     m = re.search(r"(\d{2,3})\s?(pk|ps|hp)\b", t)
     if m:
         return int(round(int(m.group(1)) * 0.7355))

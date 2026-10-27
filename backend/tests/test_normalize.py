@@ -4,7 +4,7 @@ import pytest
 
 from app.demo.catalog import CATALOG
 from app.normalize import kenteken, normalize_raw
-from app.normalize.fields import extract_options, norm_body, norm_fuel, norm_transmission
+from app.normalize.fields import extract_options, extract_power_kw, norm_body, norm_fuel, norm_transmission
 from app.normalize.taxonomy import get_model, load_taxonomy, match_vehicle
 from app.sources.base import RawListing
 from app.util import parse_date, parse_int
@@ -78,12 +78,26 @@ def test_norm_body_transmission_options():
     assert norm_transmission("Handgeschakeld") == "handgeschakeld"
     opts = extract_options("Trekhaak, Navigatie, climate control en stoelverwarming", "warmtepomp")
     assert {"trekhaak", "navigatie", "climate_control", "stoelverwarming", "warmtepomp"} <= set(opts)
+    assert extract_options("Mooie auto, geen trekhaak, wel navigatie") == ["navigatie"]
+    # "ST" / "ST-Line" are trim levels, not estates
+    assert norm_body(None, "Ford Fiesta 1.0 EcoBoost ST-Line 5d") == "hatchback"
+    assert norm_body(None, "Ford Focus 2.3 ST") is None
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("Golf 1.5 TSI 110kW", 110), ("Polo 95 pk", 70), ("VW ID.3 Pro 58 kWh 150 kW", 150),
+    ("Hyundai Kona EV 64 kWh 11kW lader 150 kW", 150), ("Renault Zoe R110 22kW lader", None),
+    ("snelladen tot 100 kW, 110 kW motor", 110),
+])
+def test_power_ignores_charging(text, expected):
+    assert extract_power_kw(text) == expected
 
 
 def test_parsers():
     assert parse_int("€ 15.950,-") == 15950
     assert parse_int("123.456 km") == 123456
     assert parse_int(None) is None
+    assert parse_int("15950.00") == 15950 and parse_int("435.0") == 435 and parse_int("15.950") == 15950
     assert parse_date("20190612") == date(2019, 6, 12)
     assert parse_date("06-2019") == date(2019, 6, 1)
     assert parse_date("2019-06-12T00:00:00.000") == date(2019, 6, 12)
@@ -93,7 +107,7 @@ def test_normalize_raw_full():
     raw = RawListing(
         source="x", source_id="1", url="u", title="Volkswagen Golf 1.4 TSI DSG Highline", make_raw="Volkswagen",
         model_raw="Golf", price_eur=12345, mileage_km=88000, first_registration=date(2016, 3, 1),
-        fuel_raw="Benzine", transmission_raw="Automaat", postcode="3511AB",
+        fuel_raw="Benzine", transmission_raw="Automaat", postcode="3511AB", seller_type="dealer",
         description="Kenteken: KK-123-B. Trekhaak en navigatie. BOVAG garantie.",
     )
     f = normalize_raw(raw)
@@ -104,3 +118,7 @@ def test_normalize_raw_full():
     assert "trekhaak" in f["options"]
     assert f["engine_cc"] == 1400
     assert f["fingerprint"]
+    # a private seller mentioning a BOVAG garage is not a BOVAG member
+    raw.seller_type = "private"
+    raw.description = "Altijd onderhouden bij BOVAG-garage."
+    assert normalize_raw(raw)["seller_bovag"] is False
