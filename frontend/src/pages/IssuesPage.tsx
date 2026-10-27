@@ -30,10 +30,21 @@ function ModelIssues({ make, model }: { make: string; model: string }) {
           AI-onderzocht met Claude + webzoekopdrachten{d.ai_research && ` op ${date(d.ai_research.created_at)} (≈ $${d.ai_research.cost_usd.toFixed(2)})`}. Controleer de bronnen; de samengestelde kennisbank gaat voor.
         </div>
       )}
-      {o?.summary && <p className="text-slate-700">{o.summary}</p>}
+      {o && o.files.length > 1 ? (
+        <div className="grid gap-3 md:grid-cols-2">
+          {o.files.map((f) => (
+            <Card key={f.id} className="space-y-1 p-4 text-sm">
+              <div className="font-semibold">{f.title}</div>
+              <p className="text-slate-700">{f.summary}</p>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        o?.summary && <p className="text-slate-700">{o.summary}</p>
+      )}
       {o?.battery_warranty && (
         <Card className="p-4 text-sm">
-          <b>Batterijgarantie:</b> {o.battery_warranty.years} jaar / {o.battery_warranty.km?.toLocaleString("nl-NL")} km
+          <b>Batterijgarantie{o.files.length > 1 ? " (elektrische uitvoering)" : ""}:</b> {o.battery_warranty.years} jaar / {o.battery_warranty.km?.toLocaleString("nl-NL")} km
           {o.battery_warranty.min_soh_pct ? `, minimaal ${o.battery_warranty.min_soh_pct}%` : ""}. {o.battery_warranty.note}
         </Card>
       )}

@@ -37,7 +37,7 @@ issues:
         Vervanging door een nieuwere revisie (bijv. Tesla-onderdeel 1044423-00-G of nieuwer) of een
         verbeterde aftermarket-draagarm; na vervanging altijd vier-wiel-uitlijning laten doen.
     verify:
-      - Vraag de servicehistorie in de Tesla-app/factuur: zijn de 'upper control arms' vervangen, en door welke revisie?
+      - "Vraag de servicehistorie in de Tesla-app/factuur: zijn de 'upper control arms' vervangen, en door welke revisie?"
       - Kijk of de rubberen hoes van het kogelgewricht heel is.
     questions:
       - Zijn de bovenste draagarmen voor al vervangen? Zo ja, wanneer en is de auto daarna uitgelijnd?

@@ -62,7 +62,7 @@ issues:
       type: maintenance
       description: Olie verversen bij stijgend peil; injector-afdichtingen vervangen; DPF-drukleidingen controleren.
     verify:
-      - Peilstok: staat het peil niet boven de X-markering? Ruikt de olie naar diesel?
+      - "Peilstok: staat het peil niet boven de X-markering? Ruikt de olie naar diesel?"
       - Vraag naar injector-/afdichtingsvervanging en DPF-reparaties.
     questions:
       - Rijdt u veel korte ritten? Is het oliepeil ooit gestegen? Zijn de injector-afdichtingen vervangen?

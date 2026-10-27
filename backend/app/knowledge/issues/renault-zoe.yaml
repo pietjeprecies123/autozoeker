@@ -32,7 +32,7 @@ issues:
       - Kan de accu worden uitgekocht, en wat kost dat?
       - Kan deze ZOE snelladen (DC/CCS)?
     test_drive:
-      - Kijk naar de laadaansluiting: is er een CCS-snellaadaansluiting?
+      - "Kijk naar de laadaansluiting: is er een CCS-snellaadaansluiting?"
     sources:
       - {title: "TopGear NL: goedkoopste EV met 400 km actieradius (huuraccu)", url: "https://topgear.nl/autonieuws/de-goedkoopste-elektrische-auto-met-400-kilometer-actieradius-kost-nog-maar-6-000-euro/"}
       - {title: "Autozine: Renault maakt prijzen ZOE 50 bekend (accuhuur)", url: "https://www.autozine.nl/renault/zoe/nieuws/renault-maakt-prijzen-zoe-50-bekend"}

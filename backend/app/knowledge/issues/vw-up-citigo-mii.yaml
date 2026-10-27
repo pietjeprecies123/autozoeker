@@ -55,7 +55,7 @@ issues:
     questions:
       - Zijn er storingen of reparaties aan de automaat/koppeling geweest?
     test_drive:
-      - Test de ASG in de stad: wegrijden, hellingproef en langzaam rijden.
+      - "Test de ASG in de stad: wegrijden, hellingproef en langzaam rijden."
     sources:
       - {title: "au7o: bekende problemen VW up! (FR)", url: "https://au7o.io/fr/known-issues/volkswagen-up"}
     reviewed: 2026-10-27

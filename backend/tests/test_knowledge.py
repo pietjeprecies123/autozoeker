@@ -17,6 +17,7 @@ def test_all_files_valid():
     for f in files:
         for t in f.get("applies_to", []):
             assert get_model(t["make"], t.get("model")), (f["id"], t)
+        assert all(isinstance(x, str) for x in f.get("general_checks", []) or []), f["id"]
         for i in f.get("issues", []):
             assert i["id"] not in seen, i["id"]
             seen.add(i["id"])
@@ -24,6 +25,12 @@ def test_all_files_valid():
             assert i["fix"]["type"] in FIX_TYPES, i["id"]
             assert i.get("sources") and all(s["url"].startswith("http") for s in i["sources"]), i["id"]
             assert i.get("questions"), i["id"]
+            # a "key: value" inside an unquoted YAML list item silently becomes a mapping
+            for key in ("symptoms", "verify", "questions", "test_drive"):
+                assert all(isinstance(x, str) for x in i.get(key, []) or []), (i["id"], key)
+            for key in ("title", "summary"):
+                assert isinstance(i.get(key, ""), str), (i["id"], key)
+            assert isinstance(i["fix"].get("description", ""), str), i["id"]
             for g in i.get("generations", []) or []:
                 assert g in gens, (i["id"], g)
             for t in i.get("applies_to", []) or []:

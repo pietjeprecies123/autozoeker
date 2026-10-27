@@ -59,7 +59,7 @@ issues:
     test_drive:
       - Rijd stapvoets in file-tempo, trek een paar keer rustig op vanuit stilstand en parkeer achteruit.
       - Let op schokken, trillen bij het wegrijden, haperend schakelen van 1 naar 2 en 2 naar 3.
-      - Na de rit: geen waarschuwingen op het dashboard?
+      - "Na de rit: geen waarschuwingen op het dashboard?"
     sources:
       - {title: "ECU Testing: DQ200/DSG7 mechatronic repair", url: "https://www.ecutesting.com/common-faults/volkswagen/volkswagen-golf-audi-a3-dsg-7-gearbox-problem/"}
       - {title: "EngineScope: VW DSG DQ200", url: "https://enginescope.gr/engine/vw-dsg-dq200/?lang=en"}

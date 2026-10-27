@@ -17,6 +17,7 @@ data/
 node_modules/
 frontend/dist/
 backend/app/static/
+*.tsbuildinfo
 
 # Env
 .env
