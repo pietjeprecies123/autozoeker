@@ -68,6 +68,15 @@ def search(req: SearchRequest, session: Session = DB):
     }
 
 
+def _csv_cell(value):
+    """Dutch Excel reads '76.3' as 763, and a cell starting with = + - @ as a formula (titles come from ads)."""
+    if isinstance(value, float):
+        return f"{value:.1f}".replace(".", ",")
+    if isinstance(value, str) and value[:1] in ("=", "+", "-", "@", "\t", "\r"):
+        return "'" + value
+    return value
+
+
 @router.post("/search/export.csv")
 def export_csv(req: SearchRequest, session: Session = DB):
     scored = run_search(session, req)
@@ -80,13 +89,13 @@ def export_csv(req: SearchRequest, session: Session = DB):
     ])
     for s in scored:
         x = s.listing
-        w.writerow([
+        w.writerow([_csv_cell(v) for v in (
             x.id, x.title, x.make, x.model, x.generation, x.year, x.mileage_km, x.price_eur, x.predicted_price,
             round(x.deal_score * 100, 1) if x.deal_score is not None else "", s.match, x.fuel, x.transmission, x.body,
             x.power_kw, plate_display(x.kenteken), x.seller_name, x.city or x.postcode, s.distance_km, x.source, x.url,
             (x.last_seen_at - x.first_seen_at).days if x.first_seen_at and x.last_seen_at else "",
             "|".join(f["title"] for f in (x.red_flags or [])),
-        ])
+        )])
     buf.seek(0)
     return StreamingResponse(
         iter([buf.getvalue().encode("utf-8-sig")]),

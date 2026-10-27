@@ -3,7 +3,7 @@ from sqlalchemy import select
 
 from app import db
 from app.main import app, ensure_profiles
-from app.models import Listing
+from app.models import Listing, Profile
 
 
 def client(seeded_engine):
@@ -77,3 +77,71 @@ def test_basic_auth_keeps_health_open(seeded_engine, monkeypatch):
     assert c.get("/api/meta").status_code == 401
     assert c.get("/api/meta", auth=("pim", "fout")).status_code == 401
     assert c.get("/api/meta", auth=("pim", "geheim")).status_code == 200
+
+
+def test_detail_and_compare_score_like_search_with_learned_weights(seeded_engine):
+    c = client(seeded_engine)
+    pid = c.get("/api/profiles").json()[1]["id"]
+    learned = {"deal": 0.05, "km": 0.6, "health": 0.1, "issues": 0.1, "seller": 0.1, "distance": 0.05}
+    with db.session_scope() as session:
+        session.get(Profile, pid).learned_weights = learned
+    try:
+        item = c.post("/api/search", json={"profile_id": pid, "page_size": 1}).json()["items"][0]
+        default = c.get(f"/api/listings/{item['id']}").json()["match"]
+        assert default != item["match"]  # the learned weights matter for this car
+        assert c.get(f"/api/listings/{item['id']}?profile_id={pid}").json()["match"] == item["match"]
+        compared = c.post("/api/compare", json={"ids": [item["id"]], "profile_id": pid}).json()["items"][0]
+        assert compared["match"] == item["match"]
+    finally:
+        with db.session_scope() as session:
+            session.get(Profile, pid).learned_weights = {}
+
+
+def test_input_validation(seeded_engine):
+    c = client(seeded_engine)
+    pid = c.get("/api/profiles").json()[0]["id"]
+    with db.session_scope() as session:
+        lid = session.scalar(select(Listing.id).where(Listing.status == "active").limit(1))
+    assert c.post(f"/api/listings/{lid}/tco", json={"years": 0}).status_code == 422
+    assert c.post("/api/compare", json={"ids": [lid], "km_per_year": -1}).status_code == 422
+    assert c.post("/api/saved-searches", json={"profile_id": pid, "name": "x", "min_match": 150}).status_code == 422
+    s = c.post("/api/saved-searches", json={"profile_id": pid, "name": "Validatie"}).json()
+    body = {"profile_id": pid, "name": "Validatie", "alert_mode": "weekly"}
+    assert c.put(f"/api/saved-searches/{s['id']}", json=body).status_code == 422
+    c.delete(f"/api/saved-searches/{s['id']}")
+
+
+def test_csv_export_is_safe_for_dutch_excel(seeded_engine):
+    from app.api.search_routes import _csv_cell
+
+    assert _csv_cell(76.3) == "76,3" and _csv_cell(12) == 12
+    assert _csv_cell("=HYPERLINK(\"http://x\")") == "'=HYPERLINK(\"http://x\")" and _csv_cell("Golf") == "Golf"
+    c = client(seeded_engine)
+    rows = [r.split(";") for r in c.post("/api/search/export.csv", json={"filters": {}}).text.splitlines()[1:50]]
+    deals = [r[9] for r in rows if r[9]]
+    assert deals and all("." not in d for d in deals) and any("," in d for d in deals)
+
+
+def test_demo_rows_stay_out_of_real_valuations(seeded_engine, monkeypatch):
+    from app.api.listing_routes import _comparables
+    from app.config import get_settings
+    from app.valuation.model import get_model_instance, set_model_instance, train
+
+    monkeypatch.setattr(get_settings(), "demo_mode", False)
+    db.set_engine(seeded_engine)
+    session = db.SessionLocal()
+    old_model = get_model_instance()
+    try:
+        assert train(session, persist=False).n_rows == 0  # only demo rows in this database
+        demo = session.scalar(select(Listing).where(Listing.is_demo.is_(True), Listing.make == "toyota").limit(1))
+        real = Listing(source="manual", source_id="real-1", title=demo.title, make=demo.make, model=demo.model,
+                       year=demo.year, mileage_km=demo.mileage_km, price_eur=demo.price_eur, is_demo=False)
+        session.add(real)
+        session.flush()
+        assert _comparables(session, real) == []
+        assert _comparables(session, demo)
+    finally:
+        session.rollback()
+        session.close()
+        set_model_instance(old_model)
+

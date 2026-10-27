@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.models import Listing, Vehicle
 from app.tco.mrb import estimate_quarter, province_for_postcode
@@ -25,8 +25,8 @@ INSURANCE_DEFAULT = 65  # €/month all-risk-ish for an average car; user should
 
 
 class TcoInput(BaseModel):
-    km_per_year: int = 13000
-    years: int = 3
+    km_per_year: int = Field(13000, ge=0, le=100_000)
+    years: int = Field(3, ge=1, le=15)
     insurance_month: float | None = None
     maintenance_month: float | None = None
     mrb_quarter_override: float | None = None

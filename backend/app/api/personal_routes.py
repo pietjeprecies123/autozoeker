@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy import func, select
@@ -65,8 +67,8 @@ class SavedSearchIn(BaseModel):
     name: str
     filters: SearchFilters = Field(default_factory=SearchFilters)
     weights: dict[str, float] = Field(default_factory=dict)
-    alert_mode: str = "instant"
-    min_match: int = 60
+    alert_mode: Literal["instant", "daily", "off"] = "instant"
+    min_match: int = Field(60, ge=0, le=100)
     price_drop_eur: int = 250
     price_drop_pct: float = 2.0
 
@@ -102,8 +104,6 @@ def list_saved(profile_id: int | None = None, session: Session = DB):
 
 @router.post("/saved-searches")
 def create_saved(body: SavedSearchIn, session: Session = DB):
-    if body.alert_mode not in ("instant", "daily", "off"):
-        raise HTTPException(400, "alert_mode moet instant, daily of off zijn")
     get_profile(session, body.profile_id)
     s = SavedSearch(**body.model_dump(exclude={"filters"}), filters=body.filters.model_dump(exclude_defaults=True))
     s.last_run_at = utcnow()  # only alert on cars that appear from now on

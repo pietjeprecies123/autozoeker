@@ -237,7 +237,9 @@ saved-search filters are applied in the database.
 
 **Sold detection:** a listing that searches haven't returned for 72 hours is re-checked on its own
 advert page before it is marked sold. Up to 20 are checked per cycle, watched cars first, so a car
-that dropped beyond the last crawled page doesn't trigger a false "sold" alert.
+that dropped beyond the last crawled page doesn't trigger a false "sold" alert. One advert seen in
+the current cycle must parse first; if it doesn't (for instance after a site changes its markup),
+nothing is marked sold.
 
 **Terms of use:** both sites' terms restrict automated collection. Scraping for personal use is a
 grey area, and the adapters will break whenever a site changes its markup. Use them at your own
@@ -338,9 +340,9 @@ frontend/src/  React 19 + TypeScript, TanStack Query, Tailwind 4, Recharts, Leaf
 
 ## Testing
 
-- `backend/tests` (85 tests):
+- `backend/tests` (119 tests):
   - normalisation and kenteken sidecodes, RDW parsing (mocked HTTP)
-  - valuation sanity (incl. the sign of the km effect), scoring, Pareto, red flags
+  - valuation sanity (incl. the sign of the km effect), scoring, Pareto, red flags (incl. negations)
   - knowledge matching and file validation
   - pipeline, sold detection, source backoff, alert dedupe, ntfy payloads
   - road tax, the Claude modules (stubbed client), source parsers (assumed shapes)
