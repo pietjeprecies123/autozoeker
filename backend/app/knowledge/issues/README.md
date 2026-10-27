@@ -41,4 +41,5 @@ issues:
 
 Rules: every issue needs at least one source; say so in `summary` when evidence is thin, anecdotal
 or from another market; prefer official sources (RDW, manufacturer, ANWB, consumer organisations).
-`tests/test_knowledge.py` validates every file.
+Quote any string that contains `: ` (`- "Na de rit: geen waarschuwingen?"`); unquoted, YAML turns it into a
+mapping. `tests/test_knowledge.py` validates every file and catches this.
