@@ -1,0 +1,111 @@
+id: stellantis-puretech-1-2
+title: 1.2 PureTech (Peugeot, Citroën, DS, Opel)
+summary: >-
+  De 1.2 PureTech-benzinemotor (EB2, 2012–2023) heeft een distributieriem die in de olie loopt. Die riem
+  kan voortijdig slijten en verbrokkelen; resten verstoppen de oliezeef, de oliedruk daalt en er kan
+  motorschade ontstaan. Ook hoog olieverbruik komt voor. Stellantis verlengde de garantie op dit probleem
+  tot 10 jaar of 175.000 km, mits het onderhoud volgens het boekje is gedaan en de diagnose/het herstel bij
+  een officiële dealer gebeurt.
+applies_to:
+  - {make: peugeot, model: "108"}
+  - {make: peugeot, model: "208"}
+  - {make: peugeot, model: "2008"}
+  - {make: peugeot, model: "308"}
+  - {make: peugeot, model: "3008"}
+  - {make: peugeot, model: "5008"}
+  - {make: peugeot, model: "508"}
+  - {make: citroen, model: c1}
+  - {make: citroen, model: c3}
+  - {make: citroen, model: c3-aircross}
+  - {make: citroen, model: c4}
+  - {make: citroen, model: c4-cactus}
+  - {make: citroen, model: c5-aircross}
+  - {make: citroen, model: berlingo}
+  - {make: ds, model: ds-3}
+  - {make: ds, model: ds-7}
+  - {make: opel, model: corsa}
+  - {make: opel, model: astra}
+  - {make: opel, model: mokka}
+  - {make: opel, model: crossland}
+  - {make: opel, model: grandland}
+general_checks:
+  - "Vraag bij een 1.2 PureTech altijd naar het onderhoudsboekje: onderhoud volgens schema is een voorwaarde voor de verlengde garantie."
+
+_base: &puretech_belt
+  title: Distributieriem in olie slijt voortijdig (oliedruk, motorschade)
+  severity: high
+  likelihood: medium
+  category: motor
+  years: [2012, 2023]
+  fuels: [benzine]
+  summary: >-
+    De natte distributieriem kan slijten en brokkelen. Riemresten kunnen de oliezeef verstoppen,
+    waardoor de oliedruk daalt; dat kan leiden tot (ernstige) motorschade. Daarnaast wordt overmatig
+    olieverbruik gemeld. Vanaf de 'Hybrid'-versies van 2023/2024 gebruikt Stellantis een ketting.
+  symptoms:
+    - Waarschuwing lage oliedruk of 'motorstoring' (oranje/rood)
+    - Oliepeil daalt snel tussen beurten
+    - Motor loopt in noodloop
+  fix:
+    type: warranty_extension
+    description: >-
+      Stellantis verlengde de garantie op dit defect tot 10 jaar of 175.000 km (ook in Nederland),
+      met terugwerkende kracht. Voorwaarden: onderhoud volgens het boekje en diagnose/herstel bij een
+      officiële Stellantis-dealer. Riemvervanging volgens (aangescherpt) schema is preventief onderhoud.
+    rdw_recall_keywords: [distributieriem, riem]
+  verify:
+    - Factuur van de laatste riemvervanging (datum en km-stand) en het onderhoudsboekje (bij voorkeur merkdealer).
+    - Laat een dealer op chassisnummer controleren of er campagnes/garantieclaims op de auto zijn geweest.
+    - Peilstok controleren; vraag naar het olieverbruik tussen beurten.
+  questions:
+    - Is de distributieriem al eens vervangen? Bij welke kilometerstand, en mag ik de factuur zien?
+    - Is het onderhoud volgens schema bij een Peugeot/Citroën/Opel-dealer gedaan (nodig voor de verlengde garantie)?
+    - Hoeveel olie moet u bijvullen tussen twee beurten?
+    - Is er ooit een melding van lage oliedruk of een motorstoring geweest?
+  test_drive:
+    - Let op oliedruk- of motorwaarschuwingen, ook na een warme snelwegrit.
+    - Check het oliepeil vóór en (indien mogelijk) na de proefrit.
+  sources:
+    - {title: "Test-Aankoop: verlengde garantie op PureTech-motoren", url: "https://www.test-aankoop.be/mobiliteit/auto-s/pers/verlengde-garantie-op-puretech-motoren"}
+    - {title: "AutoScout24: Stellantis verlengt garantie op 1.2 PureTech tot 10 jaar", url: "https://www.autoscout24.be/nl/informeren/autonieuws/stellantis-verlengt-garantie-op-geplaagde-puretech-tot-10-jaar/"}
+    - {title: "AutoReview: extra garantie en compensatie voor PureTech", url: "https://www.autoreview.nl/nieuws/id/35973/extra-garantie-en-compensatie-voor-autos-puretech-motor"}
+  reviewed: 2026-10-27
+
+issues:
+  - <<: *puretech_belt
+    id: puretech-wet-belt
+    applies_to:
+      - {make: peugeot, model: "108"}
+      - {make: peugeot, model: "208"}
+      - {make: peugeot, model: "2008"}
+      - {make: peugeot, model: "308"}
+      - {make: peugeot, model: "3008"}
+      - {make: peugeot, model: "5008"}
+      - {make: peugeot, model: "508"}
+      - {make: citroen, model: c1}
+      - {make: citroen, model: c3}
+      - {make: citroen, model: c3-aircross}
+      - {make: citroen, model: c4}
+      - {make: citroen, model: c4-cactus}
+      - {make: citroen, model: c5-aircross}
+      - {make: citroen, model: berlingo}
+      - {make: ds, model: ds-3}
+      - {make: ds, model: ds-7}
+    engine:
+      keywords: ["puretech", "pure tech", "1.2", "e-thp", "vti 82", "1.2 vti"]
+      exclude_keywords: ["1.6", "1.5", "bluehdi", "hdi", "e-208", "e-2008", "e-c4", "hybrid4", "hybrid 225", "hybrid 180"]
+      cc: [1150, 1250]
+
+  - <<: *puretech_belt
+    id: puretech-wet-belt-opel
+    applies_to:
+      - {make: opel, model: corsa}
+      - {make: opel, model: astra}
+      - {make: opel, model: mokka}
+      - {make: opel, model: crossland}
+      - {make: opel, model: grandland}
+    generations: [corsa-f, astra-l, mokka-b, crossland-1, grandland-1]
+    engine:
+      keywords: ["1.2", "puretech", "1.2 turbo"]
+      exclude_keywords: ["1.5", "1.6", "cdti", "diesel", "corsa-e", "mokka-e", "hybrid4"]
+      cc: [1150, 1250]

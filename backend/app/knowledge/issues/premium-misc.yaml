@@ -1,0 +1,120 @@
+id: premium-misc
+title: Mercedes-Benz A-Klasse (W176/W177) en Volvo 2.0 Drive-E benzine
+summary: >-
+  Mercedes A-Klasse W176: let op kettingrammel van de M270-benzinemotor (vooral 2013–2015) en schokkerig
+  schakelen van de 7G-DCT-automaat. Volvo 2.0 Drive-E benzine (T4/T5/T6/T8, ca. 2014–2020): olieverbruik
+  door zuigerveren; Volvo verlengde daarvoor in de VS de garantie – een Europese regeling vonden we niet.
+applies_to:
+  - {make: mercedes-benz, model: a-klasse}
+  - {make: mercedes-benz, model: b-klasse}
+  - {make: mercedes-benz, model: cla}
+  - {make: mercedes-benz, model: gla}
+  - {make: volvo, model: v40}
+  - {make: volvo, model: v60}
+  - {make: volvo, model: xc60}
+  - {make: volvo, model: xc90}
+  - {make: volvo, model: v90}
+issues:
+  - id: mb-m270-chain
+    title: M270-benzinemotor – kettingspanner/ketting rammelt bij koude start
+    severity: medium
+    likelihood: medium
+    category: motor
+    fuels: [benzine]
+    years: [2012, 2018]
+    applies_to:
+      - {make: mercedes-benz, model: a-klasse}
+      - {make: mercedes-benz, model: b-klasse}
+      - {make: mercedes-benz, model: cla}
+      - {make: mercedes-benz, model: gla}
+    generations: [a-w176, b-w246, cla-c117, gla-x156]
+    summary: >-
+      Bekendste zwakte van de M270/M274 is de kettingspanner (vooral 2013–2015): rammelen in de eerste
+      seconden na een koude start. Een gerekte ketting is het risico. Zweedse koopgidsen schatten de reparatie
+      op ca. 9.500–16.500 SEK (≈ €850–1.450).
+    symptoms:
+      - Ratelen direct na een koude start (enkele seconden)
+    repair_cost_eur: [850, 1450]
+    fix:
+      type: maintenance
+      description: Kettingspanner (en zo nodig ketting/nokkenasverstellers) vervangen.
+    verify:
+      - Vraag facturen van werk aan de distributie; laat de motor koud starten.
+    questions:
+      - Is de kettingspanner of distributieketting ooit vervangen? Hoort u rammelen bij koude start?
+    test_drive:
+      - Laat de motor koud starten (motorkap open) en luister de eerste 30 seconden.
+    sources:
+      - {title: "Min Bilkoll: Mercedes A 180 vanliga fel", url: "https://minbilkoll.se/vanliga-fel/mercedes-benz/a-180/"}
+      - {title: "Min Bilkoll: Mercedes A-klass vanliga fel", url: "https://minbilkoll.se/vanliga-fel/mercedes-benz/a-klass/"}
+    reviewed: 2026-10-27
+
+  - id: mb-7g-dct
+    title: 7G-DCT-automaat schakelt schokkerig/slipt (vooral in de stad)
+    severity: medium
+    likelihood: medium
+    category: transmissie
+    transmissions: [automaat]
+    fuels: [benzine, diesel]
+    applies_to:
+      - {make: mercedes-benz, model: a-klasse}
+      - {make: mercedes-benz, model: b-klasse}
+      - {make: mercedes-benz, model: cla}
+      - {make: mercedes-benz, model: gla}
+    summary: >-
+      Meerdere bronnen noemen de dubbelekoppelingsbak de zwakste schakel: schokkerig of slippend schakelen,
+      vooral in de stad. Een Duitse garage wijst op het belang van de koppelingspunten (K1/K2) en het opnieuw
+      inleren na een olieverversing. Indicatie volgens een Zweedse gids: mechatronic ca. €1.900–3.300,
+      koppelingspakket ca. €1.550–2.400.
+    symptoms:
+      - Schokken bij wegrijden of terugschakelen; slippen
+    repair_cost_eur: [1550, 3300]
+    fix:
+      type: maintenance
+      description: Bakolie verversen en opnieuw inleren (XENTRY); zo nodig mechatronic of koppelingen.
+    verify:
+      - Vraag wanneer de bakolie is ververst en of de bak is ingeleerd.
+    questions:
+      - Is de olie van de automaat ververst? Zijn er klachten over het schakelen geweest?
+    test_drive:
+      - Rij stadsverkeer en rotondes; let op schokken bij lage snelheid en bij terugschakelen.
+    sources:
+      - {title: "Carchecker: Mercedes A200 W176", url: "https://www.carchecker.pro/reports/mercedes_a200_w176.html"}
+      - {title: "KFZ Dietrich: A-Klasse W176 typische Probleme", url: "https://kfz-dietrich.com/blog/mercedes-diagnose-a-klasse-w176-typische-probleme/"}
+    reviewed: 2026-10-27
+
+  - id: volvo-drive-e-oil
+    title: Volvo 2.0 Drive-E benzine – olieverbruik (zuigerveren)
+    severity: medium
+    likelihood: low
+    category: motor
+    fuels: [benzine, plugin_hybride, hybride]
+    years: [2014, 2020]
+    applies_to:
+      - {make: volvo, model: v40}
+      - {make: volvo, model: v60}
+      - {make: volvo, model: xc60}
+      - {make: volvo, model: xc90}
+      - {make: volvo, model: v90}
+    engine:
+      keywords: ["t4", "t5", "t6", "t8"]
+      exclude_keywords: ["d2", "d3", "d4", "d5", "recharge p8", "b3", "b4", "b5"]
+    summary: >-
+      Bij de 2.0 Drive-E viercilinders (o.a. T5/T6) is overmatig olieverbruik gemeld. In de VS schikte Volvo in
+      2021 en verlengde de garantie op olieverbruik tot 10 jaar/150.000 mijl. Of daar in Nederland iets
+      vergelijkbaars voor geldt, blijkt niet uit onze bronnen – vraag het de dealer. Volvo schrijft specifieke
+      olie voor (VCC RBS0-2AE).
+    symptoms:
+      - Olie bijvullen tussen beurten
+    fix:
+      type: warranty_extension
+      description: "VS: garantieverlenging (10 jaar/150.000 mijl). NL/EU: navragen bij de dealer op chassisnummer."
+    verify:
+      - Vraag naar olieverbruik en of er een olieverbruikstest/zuigervervanging is gedaan.
+    questions:
+      - Hoeveel olie gebruikt de motor tussen beurten? Is er ooit een olieverbruikstest of motorreparatie geweest?
+    test_drive: []
+    sources:
+      - {title: "Cherish Your Car: Volvo oil consumption recall", url: "https://www.cherishyourcar.com/?p=8486"}
+      - {title: "RepairPal: Volvo S60 oil consumption", url: "https://repairpal.com/oil-consumption-resulted-in-loss-of-oil-and-failure-and-engine-seizing-up"}
+    reviewed: 2026-10-27

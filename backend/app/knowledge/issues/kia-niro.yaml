@@ -1,0 +1,63 @@
+id: kia-niro
+title: Kia Niro (1e generatie 2016–2022 en 2e generatie 2022+)
+summary: >-
+  De Niro is over het algemeen betrouwbaar. Bij de hybride (HEV) en plug-in (PHEV) is de 6-traps
+  dubbelekoppelingsbak (DCT6) het belangrijkste aandachtspunt: schokkerig wegrijden door slijtende droge
+  koppelingen. Verder genoemd: de uitlaatwarmteterugwinningsklep (EHRS), koolafzetting op de inlaatkleppen
+  van de 1.6 GDi bij veel korte ritten, en een vroeg falende 12V-accu. Bronnen zijn deels commercieel.
+applies_to:
+  - {make: kia, model: niro}
+issues:
+  - id: niro-dct6
+    title: DCT6-dubbelekoppelingsbak schokt bij wegrijden (HEV/PHEV)
+    severity: medium
+    likelihood: medium
+    category: transmissie
+    fuels: [hybride, plugin_hybride]
+    summary: >-
+      Schokkend of trillend wegrijden vanuit stilstand en schokkerig schakelen bij lage snelheid, door
+      ongelijkmatig slijtende droge koppelingen. Een Franse occasiongids noemt de DCT6 het belangrijkste
+      testpunt; zonder duidelijke diagnose van schokken/slippen liever afzien.
+    symptoms:
+      - Schokken/trillen bij het wegrijden
+      - Haperend schakelen bij lage snelheid
+    repair_cost_eur: [800, 1200]
+    fix:
+      type: maintenance
+      description: Koppelingspakket vervangen (indicatie €800–1.200 bij een specialist); regelmatig DCT-olie verversen wordt aangeraden.
+    verify:
+      - Vraag naar facturen van werk aan de DCT en eventuele software-updates.
+    questions:
+      - Is er ooit iets aan de versnellingsbak gedaan (koppeling, software)?
+    test_drive:
+      - Trek meerdere keren op vanuit stilstand en rij stapvoets; let op schokken, trillen en slippen.
+    sources:
+      - {title: "Autodoc: Kia Niro problems", url: "https://www.autodoc.co.uk/info/kia-niro-problems"}
+      - {title: "Carverif: fiabilité Kia Niro II (DCT6)", url: "https://carverif.fr/pages/modele-occasion/kia-niro-ii-sg2-2022-2024"}
+    reviewed: 2026-10-27
+
+  - id: niro-ehrs-12v
+    title: EHRS-klep (koelsysteem) en vroeg falende 12V-accu
+    severity: low
+    likelihood: low
+    category: motor
+    fuels: [hybride, plugin_hybride]
+    summary: >-
+      De klep van het uitlaatwarmteterugwinningssysteem (EHRS) kan vastlopen, waardoor koelvloeistof
+      verdampt (genoemd rond 80.000–100.000 km). De 12V-accu kan vroeg uitvallen. Op 2022–2023-modellen
+      liepen terugroepacties (o.a. instrumentenpaneel); controleer de RDW-status.
+    symptoms:
+      - Koelvloeistofpeil daalt
+      - Auto start niet door lege 12V-accu
+    fix:
+      type: maintenance
+      description: EHRS-klep of 12V-accu vervangen; terugroepacties via de dealer.
+    verify:
+      - Controleer het koelvloeistofpeil en de RDW-terugroepstatus.
+    questions:
+      - Is de 12V-accu of de EHRS-klep ooit vervangen?
+    test_drive: []
+    sources:
+      - {title: "Autodoc: Kia Niro problems", url: "https://www.autodoc.co.uk/info/kia-niro-problems"}
+      - {title: "Carverif: fiabilité Kia Niro II", url: "https://carverif.fr/pages/modele-occasion/kia-niro-ii-sg2-2022-2024"}
+    reviewed: 2026-10-27

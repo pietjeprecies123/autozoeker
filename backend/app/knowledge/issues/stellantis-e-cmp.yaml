@@ -1,0 +1,50 @@
+id: stellantis-e-cmp
+title: Elektrische Peugeot/Opel/Citroën/DS op e-CMP (e-208, e-2008, Corsa-e, Mokka-e, ë-C4, DS 3 E-Tense)
+summary: >-
+  Bij deze elektrische modellen komen storingen van de ingebouwde lader (on-board charger, OBC, gemaakt
+  door Mahle) voor: AC-laden werkt dan niet meer, alleen snelladen nog wel. Stellantis verlengde in
+  Nederland de garantie op de lader voor de meeste getroffen modellen naar 4 jaar. Vroege kinderziektes van
+  het platform zijn grotendeels in de fabriek verholpen.
+applies_to:
+  - {make: peugeot, model: "208"}
+  - {make: peugeot, model: "2008"}
+  - {make: peugeot, model: "308"}
+  - {make: opel, model: corsa}
+  - {make: opel, model: mokka}
+  - {make: citroen, model: c4}
+  - {make: ds, model: ds-3}
+battery_warranty:
+  years: 8
+  km: 160000
+  min_soh_pct: 70
+  note: "Gangbare Stellantis-accugarantie; controleer de exacte voorwaarden in het garantieboekje."
+issues:
+  - id: e-cmp-obc
+    title: Ingebouwde lader (OBC) defect – AC-laden werkt niet meer
+    severity: high
+    likelihood: medium
+    category: elektrisch
+    fuels: [elektrisch]
+    years: [2019, null]
+    summary: >-
+      Een defecte Mahle-lader (OBC) zorgt dat laden aan een gewone laadpaal of thuislader stopt; alleen
+      DC-snelladen werkt nog. Een Nederlandse geschillencommissie stelde in 2022 een e-208-rijder in het gelijk.
+      Stellantis verlengde in Nederland de garantie op de OBC naar 4 jaar voor de meeste getroffen modellen.
+    symptoms:
+      - AC-laden start niet of breekt af; foutmelding laadsysteem
+      - Snelladen (DC) werkt wel
+    fix:
+      type: warranty_extension
+      description: Vervanging van de lader onder (verlengde) garantie bij de dealer.
+      rdw_recall_keywords: [lader, laad, obc, oplaad]
+    verify:
+      - Vraag of de lader (OBC) ooit is vervangen en tot wanneer de verlengde garantie loopt.
+    questions:
+      - Is de ingebouwde lader (OBC) ooit vervangen of gerepareerd? Laadt de auto probleemloos thuis/aan de paal?
+    test_drive:
+      - Sluit de auto aan op een AC-laadpaal en controleer dat hij daadwerkelijk laadt (en met welk vermogen).
+    sources:
+      - {title: "AVROTROS Radar: vaker laadproblemen bij Peugeot, Opel en meer", url: "https://radar.avrotros.nl/artikel/vaker-laadproblemen-in-deze-autos-van-peugeot-opel-en-meer-61427"}
+      - {title: "NewMobility: Stellantis faces complaints over faulty onboard chargers", url: "https://newmobility.news/2025/03/25/stellantis-faces-mounting-complaints-over-faulty-onboard-chargers/"}
+      - {title: "L'argus: Opel Corsa-e, problèmes de jeunesse", url: "https://www.largus.fr/actualite-automobile/opel-corsa-e-electrique-les-problemes-de-jeunesse-et-leurs-correctifs-10612399.html"}
+    reviewed: 2026-10-27

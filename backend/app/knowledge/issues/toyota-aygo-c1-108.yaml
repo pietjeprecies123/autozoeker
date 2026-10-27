@@ -1,0 +1,62 @@
+id: toyota-aygo-c1-108
+title: Toyota Aygo / Citroën C1 / Peugeot 108 (drielingen, 1.0 driecilinder)
+summary: >-
+  De drie stadsauto's zijn technisch vrijwel identiek. Bij de eerste generatie (2005–2014) zijn
+  waterlekkage en snelle koppelingsslijtage bekend; bij de tweede generatie (2014–2022) melden eigenaren
+  minder lekkage (andere afdichtingen/achterkant). De waterpomp van de 1.0 driecilinder kan gaan lekken.
+applies_to:
+  - {make: toyota, model: aygo}
+  - {make: citroen, model: c1}
+  - {make: peugeot, model: "108"}
+issues:
+  - id: aygo-water-leak
+    title: Waterlekkage (portieren, derde remlicht, achterlichten)
+    severity: low
+    likelihood: medium
+    category: carrosserie
+    summary: >-
+      Water komt binnen bij de voorportieren (in de ronding naar het dak), via het derde remlicht of achter
+      de achterlichten, met een natte achterbak of beslagen ruiten tot gevolg. Vooral een probleem bij de
+      eerste generatie; de tweede generatie kreeg een ander ontwerp (minder klachten volgens eigenaren).
+    symptoms:
+      - Natte achterbak of vloer, beslagen ruiten, muffe geur
+    fix:
+      type: none
+      description: Afdichtingen vervangen of de achterlichten/het derde remlicht opnieuw afkitten.
+    verify:
+      - Til de bodem van de kofferbak op en voel naar vocht; check de matten.
+    questions:
+      - Is de auto ooit nat geweest van binnen? Is er iets aan afdichtingen of lampen gedaan?
+    test_drive: []
+    sources:
+      - {title: "Autoblog: C1/107/Aygo occasion-aankoopadvies", url: "https://www.autoblog.nl/nieuws/citroen-c1-peugeot-107-toyota-aygo-occasion-aankoopadvies-60787"}
+      - {title: "Toyota Owners Club: second-generation Aygo/C1/108 ervaringen", url: "https://toyotaownersclub.com/forums/topic/203019-what-ever-broke-down-on-your-second-generation-aygo-mid-2014-onwards-or-c1-p-108"}
+    reviewed: 2026-10-27
+
+  - id: aygo-clutch-waterpump
+    title: Koppeling slijt relatief snel; waterpomp kan lekken
+    severity: low
+    likelihood: medium
+    category: motor
+    engine:
+      keywords: ["1.0", "vti", "vvt-i", "x-play", "x-joy"]
+      exclude_keywords: ["1.2", "puretech"]
+    summary: >-
+      De koppeling slijt relatief snel (zeker met veel stadsgebruik) en de waterpomp van de 1.0 driecilinder
+      staat bekend als zwak punt (lekkage). Bij vroege exemplaren liep een terugroepactie voor de koppeling.
+    symptoms:
+      - Koppeling grijpt hoog aan of slipt bij optrekken
+      - Koelvloeistofverlies, zoete geur
+    fix:
+      type: maintenance
+      description: Koppeling of waterpomp vervangen.
+      rdw_recall_keywords: [koppeling]
+    verify:
+      - Facturen van koppelings- of waterpompvervanging.
+    questions:
+      - Is de koppeling of waterpomp al eens vervangen?
+    test_drive:
+      - "Trek op in een hoge versnelling bij lage toeren: slipt de koppeling (toerental loopt op zonder snelheid)?"
+    sources:
+      - {title: "Autoblog: C1/107/Aygo occasion-aankoopadvies", url: "https://www.autoblog.nl/nieuws/citroen-c1-peugeot-107-toyota-aygo-occasion-aankoopadvies-60787"}
+    reviewed: 2026-10-27

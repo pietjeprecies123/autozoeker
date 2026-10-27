@@ -1,0 +1,40 @@
+id: tesla-model-s-x
+title: Tesla Model S (2012–2021) en Model X (2016–2021)
+summary: >-
+  Bekendste probleem bij oudere Model S/X is het 8 GB eMMC-geheugen in de mediacomputer (MCU1) dat
+  door slijtage uitvalt: scherm zwart, geen achteruitrijcamera. Tesla voerde hiervoor een
+  terugroepactie/garantieregeling uit (o.a. in de VS en het VK). Auto's gebouwd vanaf maart 2018 hebben
+  64 GB geheugen en vallen hier niet onder.
+applies_to:
+  - {make: tesla, model: model-s}
+  - {make: tesla, model: model-x}
+issues:
+  - id: tesla-mcu1-emmc
+    title: Mediacomputer (MCU1) valt uit door versleten eMMC-geheugen
+    severity: medium
+    likelihood: high
+    category: elektrisch
+    years: [2012, 2018]
+    summary: >-
+      Het 8 GB eMMC-geheugen slijt bij elk gebruik; bij Model S 2012–2015 lag het uitvalpercentage volgens
+      Tesla-data rond 14–17%, bij 2016–2018 rond 2–4% en oplopend. Gevolg: zwart scherm, geen
+      achteruitrijcamera, mogelijk invloed op Autopilot. In het VK valt Model S 2012–2018 en Model X 2016–2018
+      onder de terugroepactie.
+    symptoms:
+      - Middenscherm blijft zwart of herstart steeds, ook na een schermreset
+      - Geen beeld van de achteruitrijcamera
+    fix:
+      type: recall
+      description: Terugroepactie/'8GB eMMC Warranty Adjustment Program'; vaak upgrade naar MCU2. Auto's vanaf maart 2018 hebben 64 GB.
+      rdw_recall_keywords: [emmc, mcu, beeldscherm, display, camera, geheugen]
+    verify:
+      - Kijk in het menu 'Software'/'Over' welke MCU de auto heeft (MCU2 = opgelost).
+      - Controleer de RDW-terugroepstatus van het kenteken.
+    questions:
+      - Heeft de auto al een MCU2-upgrade of nieuw geheugen gekregen? Mag ik de factuur/werkorder zien?
+    test_drive:
+      - Start de auto een paar keer en test scherm, navigatie en achteruitrijcamera.
+    sources:
+      - {title: "Which?: Tesla recalls Model S and Model X in the UK", url: "https://www.which.co.uk/news/2021/02/tesla-recalls-model-s-and-model-x-cars-in-the-uk/"}
+      - {title: "Drive Tesla Canada: NHTSA vraagt recall 158.000 auto's (eMMC)", url: "https://driveteslacanada.ca/model-s/nhtsa-tesla-recall-158000-vehicles-touchscreen-failures/"}
+    reviewed: 2026-10-27

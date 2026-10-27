@@ -1,0 +1,52 @@
+id: tesla-model-3-y
+title: Tesla Model 3 (2019–2023) en Model Y (2021–2025)
+summary: >-
+  Bekendste mechanische zwakte zijn de bovenste draagarmen (upper control arms) voor: water dringt langs de
+  rubberen hoes van het kogelgewricht, het vet spoelt weg en het gewricht gaat kraken/klunken. Er zijn
+  verbeterde onderdelen (nieuwere revisies van Tesla en aftermarket). De Model 3 'Highland' (2024+) heeft
+  andere ophangingsdelen. Batterijgarantie: 8 jaar met minimaal 70% capaciteit; km-grens afhankelijk van
+  de uitvoering.
+applies_to:
+  - {make: tesla, model: model-3}
+  - {make: tesla, model: model-y}
+battery_warranty:
+  years: 8
+  km: 192000
+  min_soh_pct: 70
+  note: "Long Range/Performance: 8 jaar of 192.000 km; Standard Range (Plus)/RWD: 8 jaar of 160.000 km; minimaal 70% capaciteit (Tesla-voorwaarden bij introductie). Controleer het garantieboekje voor jouw VIN."
+general_checks:
+  - "Controleer in het menu Software welke versie de auto heeft en of de batterij-informatie (capaciteit bij 100%) logisch is."
+issues:
+  - id: tesla-upper-control-arm
+    title: Bovenste draagarmen voor kraken/klunken (kogelgewricht)
+    severity: medium
+    likelihood: high
+    category: ophanging
+    generations: [model-3-1, model-y-1]
+    summary: >-
+      Water en vuil komen langs de hoes van het kogelgewricht van de bovenste draagarm, het vet spoelt weg
+      en er ontstaat roest en metaal-op-metaalcontact. Gevolg: kraken/piepen en klunken, vooral bij
+      drempels en koud weer. Tesla-servicecenters zouden de reparatie vaak (deels) uit coulance doen.
+    symptoms:
+      - Kraken of piepen voor bij drempels, insturen of lage snelheid
+      - Klunkend geluid voor over oneffenheden
+    repair_cost_eur: [300, 700]
+    fix:
+      type: revised_part
+      description: >-
+        Vervanging door een nieuwere revisie (bijv. Tesla-onderdeel 1044423-00-G of nieuwer) of een
+        verbeterde aftermarket-draagarm; na vervanging altijd vier-wiel-uitlijning laten doen.
+    verify:
+      - "Vraag de servicehistorie in de Tesla-app/factuur: zijn de 'upper control arms' vervangen, en door welke revisie?"
+      - Kijk of de rubberen hoes van het kogelgewricht heel is.
+    questions:
+      - Zijn de bovenste draagarmen voor al vervangen? Zo ja, wanneer en is de auto daarna uitgelijnd?
+      - Hoort u kraken of klunken bij drempels?
+    test_drive:
+      - Rij langzaam over drempels en draai het stuur stilstaand/stapvoets heen en weer met het raam open; luister naar kraken/klunken voor.
+      - Let op scheef afgesleten voorbanden (uitlijning).
+    sources:
+      - {title: "Go-Parts: Tesla Model 3/Y suspension control arm (revisie, kosten)", url: "https://www.go-parts.com/garage/suspension-control-arm-tesla-3-tesla-y-2017-2026"}
+      - {title: "electrive: Meyle ontwerpt nieuwe draagarm voor Tesla", url: "https://www.electrive.com/2022/09/09/meyle-designs-new-control-arm-for-tesla/"}
+      - {title: "Autobiz: replacing squeaky Tesla control arms", url: "https://www.autobiz.ie/aftermarket/replacing-squeaky-tesla-control-arms"}
+    reviewed: 2026-10-27

@@ -1,0 +1,82 @@
+id: toyota-hybrid
+title: Toyota/Lexus hybrides (Prius, Auris, Yaris, Corolla, C-HR, RAV4, CT 200h)
+summary: >-
+  Toyota-hybrides staan bekend als zeer betrouwbaar; de ANWB-Wegenwacht kent bij de RAV4 (4e generatie) en
+  C-HR geen structurele technische euvels. Specifieke aandachtspunten: katalysatordiefstal bij oudere
+  Prius/Auris/CT 200h, een leeggereden tank bij hybrides (alleen tanken is dan niet genoeg), en de
+  hybride-accugarantie die tot 15 jaar kan doorlopen bij een jaarlijkse hybride-check bij de dealer.
+applies_to:
+  - {make: toyota, model: prius}
+  - {make: toyota, model: auris}
+  - {make: toyota, model: yaris}
+  - {make: toyota, model: yaris-cross}
+  - {make: toyota, model: corolla}
+  - {make: toyota, model: c-hr}
+  - {make: toyota, model: rav4}
+  - {make: lexus, model: ct}
+  - {make: lexus, model: ux}
+  - {make: lexus, model: nx}
+general_checks:
+  - "Vraag naar de jaarlijkse hybride-check bij de Toyota-dealer: die verlengt de hybride-accugarantie (tot 15 jaar na registratie, volgens Toyota-voorwaarden; check de Nederlandse voorwaarden)."
+  - "Rij een hybride nooit helemaal leeg: als ook de hybride-accu leeg raakt, helpt alleen tanken niet meer (ANWB)."
+issues:
+  - id: toyota-cat-theft
+    title: Katalysatordiefstal (oudere Prius, Auris en CT 200h)
+    severity: medium
+    likelihood: medium
+    category: diefstal
+    fuels: [hybride]
+    applies_to:
+      - {make: toyota, model: prius}
+      - {make: toyota, model: auris}
+      - {make: lexus, model: ct}
+    years: [2003, 2018]
+    generations: [prius-3, auris-2, ct-1]
+    summary: >-
+      Toyota-katalysatoren bevatten relatief veel edelmetaal en zijn populair bij dieven: genoemd worden
+      Prius 2 en 3 (2003–2016), Auris (2010–2018) en Lexus CT 200h (2011–2018). Dealers bieden een
+      beschermplaat of laspunt aan (circa €125–250 volgens nieuwsberichten).
+    symptoms:
+      - Uitlaat klinkt ineens veel harder (vooral bij het starten van de motor)
+      - Motorstoringslampje
+    fix:
+      type: none
+      description: Preventie met een anti-diefstalplaat of lasverbinding; bij diefstal vervanging (vaak via de verzekering).
+    verify:
+      - Kijk onder de auto of er een beschermplaat/laspunt rond de katalysator zit.
+      - Vraag of de katalysator ooit gestolen/vervangen is (origineel onderdeel?).
+    questions:
+      - Is de katalysator beveiligd (plaat of lasverbinding)? Is hij ooit gestolen geweest?
+    test_drive:
+      - Luister naar het uitlaatgeluid als de benzinemotor aanslaat.
+    sources:
+      - {title: "Omroep Brabant: Toyota favoriet bij katalysatordieven", url: "https://www.omroepbrabant.nl/nieuws/4278691/toyota-favoriet-bij-katalysatordieven-zo-komt-dat-en-zo-voorkom-je-het"}
+      - {title: "AutoRAI: zo bescherm je een Toyota-katalysator", url: "https://autorai.nl/dit-kan-je-doen-om-toyota-katalysator-te-beschermen/"}
+    reviewed: 2026-10-27
+
+  - id: toyota-hybrid-battery-warranty
+    title: Hybride-accu – check gezondheid en (verlengde) garantie
+    severity: low
+    likelihood: low
+    category: accu
+    fuels: [hybride, plugin_hybride]
+    summary: >-
+      Hybride-accu's van Toyota gaan doorgaans lang mee. Toyota biedt bovenop de standaard
+      hybride-accugarantie een verlenging met telkens 1 jaar/15.000 km na een hybride-check bij de dealer,
+      tot 15 jaar na registratie (voorwaarden uit Ierland; de Nederlandse voorwaarden kunnen afwijken).
+      Een auto met complete dealerhistorie kan dus nog accugarantie hebben.
+    fix:
+      type: warranty_extension
+      description: Jaarlijkse hybride-check bij een Toyota-dealer verlengt de hybride-accugarantie (zie voorwaarden).
+    verify:
+      - Vraag naar de rapporten van de jaarlijkse hybride-check (batterijtest).
+      - Laat de dealer de garantiestatus op chassisnummer opzoeken.
+    questions:
+      - Is de hybride-check elk jaar bij de dealer gedaan? Loopt de verlengde hybride-accugarantie nog?
+    test_drive:
+      - Let op het soepel overschakelen tussen elektrisch en benzine en op hybride-waarschuwingen.
+    sources:
+      - {title: "Toyota Ireland: Hybrid Battery Extended Care (15 jaar)", url: "https://www.toyota.ie/models/camry/reliability-and-warranty"}
+      - {title: "CompleteCar: Toyota hybrid service guarantee for 15 years", url: "https://www.completecar.ie/features/post/10014/Toyota-hybrid-service-guarantee-for-15-years"}
+      - {title: "ANWB: Toyota C-HR occasion-review (geen technische euvels bekend)", url: "https://www.anwb.nl/auto/tests/auto-reviews/detail/57dc6fcdc3a48368b2406e1ed464416e"}
+    reviewed: 2026-10-27

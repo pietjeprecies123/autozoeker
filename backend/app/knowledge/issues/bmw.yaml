@@ -1,0 +1,83 @@
+id: bmw
+title: BMW – N47-diesel (2007–2015) en i3 (REx)
+summary: >-
+  Bij de viercilinder dieselmotor N47 (o.a. 116d/118d/120d, 316d–325d, 520d en X1 tot ca. 2014/2015) is de
+  distributieketting (achterop de motor) een bekend zwak punt: rammelen, en bij breuk zware motorschade. Bij
+  de i3 met range extender (REx) zijn de benzine-range-extender en de elektronica (EME, laadelektronica)
+  de bekende storingsbronnen.
+applies_to:
+  - {make: bmw, model: 1-serie}
+  - {make: bmw, model: 3-serie}
+  - {make: bmw, model: 5-serie}
+  - {make: bmw, model: x1}
+  - {make: bmw, model: x3}
+  - {make: bmw, model: i3}
+issues:
+  - id: bmw-n47-chain
+    title: N47-diesel – distributieketting rekt/breekt
+    severity: high
+    likelihood: medium
+    category: motor
+    fuels: [diesel]
+    years: [2007, 2015]
+    applies_to:
+      - {make: bmw, model: 1-serie}
+      - {make: bmw, model: 3-serie}
+      - {make: bmw, model: 5-serie}
+      - {make: bmw, model: x1}
+      - {make: bmw, model: x3}
+    engine:
+      keywords: ["114d", "116d", "118d", "120d", "123d", "316d", "318d", "320d", "325d", "520d", "sdrive16d", "sdrive18d", "xdrive18d", "sdrive20d", "xdrive20d", "x1 18d", "x1 20d", "n47"]
+    summary: >-
+      De ketting zit aan de achterkant van de motor. Een gerekte ketting geeft een metaalachtig ratelen dat
+      met het toerental meegroeit (vooral rond 1.500–1.800 tpm) en foutcodes P0016–P0018. Breekt de ketting,
+      dan raken kleppen en zuigers elkaar (motorschade). Niet elke auto heeft het; het hangt af van het
+      bouwjaar. Regelmatig olie verversen en weinig korte ritten verminderen de slijtage.
+    symptoms:
+      - Ratelend/zingend geluid achter de motor, vooral rond 1.500–1.800 tpm en bij koude start
+      - Ruw lopen of noodloop; foutcodes P0016/P0017/P0018
+    repair_cost_eur: [600, 9000]
+    fix:
+      type: maintenance
+      description: Ketting, spanner en geleiders vervangen (motor moet eruit); bij breuk motorrevisie of -vervanging.
+    verify:
+      - Vraag een factuur van een eerdere kettingvervanging.
+      - Laat een BMW-specialist de ketting(spanning) controleren/uitlezen.
+    questions:
+      - Is de distributieketting al vervangen? Mag ik de factuur zien?
+      - Hoe vaak is de olie ververst (intervallen)?
+    test_drive:
+      - Luister bij koude start en tussen 1.500 en 2.000 tpm naar ratelen achter de motor.
+    sources:
+      - {title: "Wikipedia: BMW N47", url: "https://en.wikipedia.org/wiki/BMW_N47"}
+      - {title: "HonestJohn: timing chain failure on BMW 120d", url: "https://www.honestjohn.co.uk/askhj/answer/44795/timing-chain-failure-on-bmw-120d-is-this-common-"}
+      - {title: "Carpedia: motore N47, problema catena di distribuzione", url: "https://www.carpedia.it/casistica-guasto/motore-n47-problema-catena-di-distribuzione-facciamo-chiarezza-4785?print=pdf"}
+    reviewed: 2026-10-27
+
+  - id: bmw-i3-rex-electronics
+    title: i3 – storingen range extender (REx) en aandrijf-/laadelektronica
+    severity: medium
+    likelihood: medium
+    category: elektrisch
+    applies_to: [{make: bmw, model: i3}]
+    summary: >-
+      De grootste problemen komen van REx-versies: brandstofpomprelais, injectoren en de druksensor van de
+      tank. Daarnaast kan de aandrijfelektronica (EME) uitvallen, en een storing in de laadelektronica (KLK)
+      kan het AC-laden halveren. De REx verdween bij de facelift (in de VS 2019).
+    symptoms:
+      - Range extender start niet of foutmeldingen bij REx-gebruik
+      - Auto valt uit / laat zich niet starten (EME)
+      - AC-laden met slechts de helft van het normale vermogen
+    fix:
+      type: none
+      description: Reparatie via BMW of een i3-specialist; controleer of de hoogvoltage-garantie nog loopt.
+    verify:
+      - Laat de REx en laadelektronica uitlezen; vraag naar eerdere reparaties.
+    questions:
+      - Heeft de range extender storingen gehad? Is de EME of laadelektronica ooit vervangen?
+    test_drive:
+      - Laad de auto aan een AC-paal en controleer het laadvermogen; laat (bij REx) de range extender aanslaan.
+    sources:
+      - {title: "BMWBlog: used buyer's guide BMW i3", url: "https://www.bmwblog.com/2021/12/03/used-buyers-guide-bmw-i3/"}
+      - {title: "PistonHeads: BMW i3 used buying guide", url: "https://www.pistonheads.com/news/ph-buying-guides/bmw-i3-ph-used-buying-guide/44928"}
+    reviewed: 2026-10-27

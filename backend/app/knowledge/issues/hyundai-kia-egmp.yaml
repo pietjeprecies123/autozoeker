@@ -1,0 +1,42 @@
+id: hyundai-kia-egmp
+title: Hyundai IONIQ 5 / IONIQ 6 en Kia EV6 (E-GMP-platform)
+summary: >-
+  De E-GMP-auto's zijn technisch sterk (800V, snel laden), maar de geïntegreerde laadunit (ICCU) kan
+  uitvallen. Dan wordt de 12V-accu niet meer bijgeladen en kan de auto tijdens het rijden stilvallen.
+  Hyundai en Kia voerden wereldwijd terugroepacties uit (software-update en vervanging van defecte ICCU's);
+  in Oostenrijk ging het bijvoorbeeld om IONIQ 5 gebouwd januari 2021–februari 2024.
+applies_to:
+  - {make: hyundai, model: ioniq-5}
+  - {make: hyundai, model: ioniq-6}
+  - {make: kia, model: ev6}
+issues:
+  - id: egmp-iccu
+    title: ICCU (laadunit) faalt → 12V-accu laadt niet bij, auto kan stilvallen
+    severity: high
+    likelihood: medium
+    category: elektrisch
+    years: [2021, 2024]
+    summary: >-
+      Een transistor in de ICCU kan onder bepaalde belasting falen; de zekering van de ICCU slaat door en de
+      12V-accu wordt niet meer geladen. In het ergste geval valt de auto plotseling stil. Remedie volgens de
+      terugroepdocumenten: software-update die overstroom voorkomt, en kosteloze vervanging van defecte
+      ICCU's.
+    symptoms:
+      - Melding 'controleer elektrisch systeem' of 12V-waarschuwing
+      - Laden stopt (AC-laden werkt niet meer), auto start niet of valt stil
+    fix:
+      type: recall
+      description: Software-update en zo nodig vervanging van de ICCU via de dealer (kosteloos).
+      rdw_recall_keywords: [iccu, laadeenheid, laadunit, 12v, 12 v, 12-volt, oplaad]
+    verify:
+      - Bekijk in het RDW-rapport of de terugroepactie is afgemeld ('Producent heeft herstel gemeld').
+      - Vraag of de ICCU al vervangen is en of de software-update is uitgevoerd.
+    questions:
+      - Is de ICCU-terugroepactie (software-update) uitgevoerd? Is de ICCU ooit vervangen?
+      - Heeft de auto ooit stilgestaan door een lege 12V-accu?
+    test_drive:
+      - Test AC-laden aan een paal of thuislader en DC-snelladen als dat kan.
+    sources:
+      - {title: "ÖAMTC: terugroepactie IONIQ 5/6 – integrierte Ladeeinheit (ICCU)", url: "https://www.oeamtc.at/rueckrufaktionen/hyundai-ioniq-5-ioniq-6-probleme-mit-der-integrierten-ladeeinheit-iccu-73473294"}
+      - {title: "InsideEVs: Hyundai, Kia recall over 200,000 EVs (ICCU)", url: "https://insideevs.com/news/742007/hyunda-kia-iccu-12-volt-recall/"}
+    reviewed: 2026-10-27

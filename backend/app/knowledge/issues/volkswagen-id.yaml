@@ -1,0 +1,50 @@
+id: volkswagen-id
+title: Volkswagen ID.3 / ID.4 / ID.5 (en Škoda Enyaq, CUPRA Born op hetzelfde MEB-platform)
+summary: >-
+  De MEB-elektrische auto's hadden vooral softwarekinderziektes. Vroege ID.3's kregen een grote
+  software-update en een nieuwe 12V-accu; bij de ID.4 worden ook 12V-accuproblemen (via de DC/DC-
+  omvormer) en display-/infotainmentstoringen gemeld, deels via terugroepacties opgelost. De bronnen
+  zijn grotendeels Amerikaans/Brits; controleer de Nederlandse terugroepstatus per kenteken.
+applies_to:
+  - {make: volkswagen, model: id-3}
+  - {make: volkswagen, model: id-4}
+  - {make: volkswagen, model: id-5}
+  - {make: skoda, model: enyaq}
+  - {make: cupra, model: born}
+battery_warranty:
+  years: 8
+  km: 160000
+  min_soh_pct: 70
+  note: "Volkswagen-groep geeft 8 jaar op de hoogvoltage-accu (in de VS 100.000 mijl). Controleer de exacte EU-voorwaarden en km-grens in het garantieboekje."
+general_checks:
+  - "Vraag welke softwareversie de auto heeft en of alle updates (ook over-the-air) zijn uitgevoerd."
+issues:
+  - id: meb-12v-software
+    title: 12V-accu loopt leeg / softwarestoringen (vooral vroege bouwjaren)
+    severity: medium
+    likelihood: medium
+    category: elektrisch
+    years: [2020, 2023]
+    summary: >-
+      Vroege ID.3's (2020–2021) hadden problemen met de 12V-accu; Volkswagen bood een software-update en
+      een vervangende 12V-accu aan. Bij de ID.4 worden voortijdig falende 12V-accu's en
+      display-/infotainmentstoringen gemeld; in de VS liepen daarvoor terugroepacties.
+    symptoms:
+      - Auto start niet of geeft 12V-melding terwijl de hoofdaccu vol is
+      - Scherm start niet op of reset; verlies van functies
+    fix:
+      type: software
+      description: Software-updates (dealer of over-the-air) en zo nodig vervanging van de 12V-accu; terugroepacties in sommige markten.
+      rdw_recall_keywords: [software, 12v, 12 v, accu, display, beeldscherm]
+    verify:
+      - Vraag de dealer op chassisnummer naar uitgevoerde updates en openstaande campagnes.
+      - Laat de 12V-accu testen; vraag of die al vervangen is.
+    questions:
+      - Zijn alle software-updates uitgevoerd? Welke softwareversie heeft de auto nu?
+      - Is de 12V-accu ooit vervangen of heeft de auto pech gehad door een lege 12V-accu?
+    test_drive:
+      - Controleer of navigatie, scherm en laadschermen zonder vastlopers werken.
+    sources:
+      - {title: "Electrifying: grote software-update en nieuwe 12V-accu voor vroege ID.3", url: "https://www.electrifying.com/blog/article/volkswagen-plans-big-software-update-and-new-12-volt-battery-for-early-id-3-owners"}
+      - {title: "Recharged: VW ID.4 common problems and fixes", url: "https://recharged.com/articles/vw-id4-common-problems-and-fixes"}
+    reviewed: 2026-10-27

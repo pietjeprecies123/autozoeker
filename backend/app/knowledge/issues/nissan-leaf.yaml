@@ -1,0 +1,44 @@
+id: nissan-leaf
+title: Nissan Leaf (ZE0/AZE0 2011–2017 en ZE1 2018–2024)
+summary: >-
+  De Leaf heeft (in beide generaties) een passief luchtgekoelde accu zonder vloeistofkoeling. Hitte en veel
+  snelladen versnellen de degradatie; vroege 24 kWh-accu's verloren het meest capaciteit. Beoordeel een
+  Leaf daarom op de accugezondheid (SoH), niet op de kilometerstand.
+applies_to:
+  - {make: nissan, model: leaf}
+battery_warranty:
+  years: 8
+  km: 160000
+  note: "Nissan geeft 8 jaar / 160.000 km op de accu (in de VS 100.000 mijl, overdraagbaar). De capaciteitsdrempel staat in de garantievoorwaarden; controleer die bij de dealer."
+general_checks:
+  - "Tel de capaciteitsbalkjes rechts naast de laadmeter (12 = nieuw). Elk verloren balkje betekent capaciteitsverlies."
+issues:
+  - id: leaf-battery-degradation
+    title: Accudegradatie (geen actieve accukoeling)
+    severity: high
+    likelihood: high
+    category: accu
+    summary: >-
+      Zonder vloeistofkoeling wordt de accu warm bij snelladen en in de zomer, wat de veroudering versnelt.
+      Typisch verlies volgens een bron: 2–5% in het eerste jaar, daarna 2–3% per jaar; hogere verliezen bij
+      veel snelladen. Ook latere 40 en 62 kWh-accu's hebben geen vloeistofkoeling, maar houden zich beter dan
+      de vroegste 24 kWh-versies.
+    symptoms:
+      - Minder dan 12 capaciteitsbalkjes
+      - Actieradius duidelijk lager dan verwacht
+      - Laadsnelheid zakt bij meerdere snellaadsessies achter elkaar (warme accu)
+    fix:
+      type: warranty_extension
+      description: Bij capaciteitsverlies binnen de garantietermijn onder de drempel kan Nissan de accu herstellen/vervangen.
+    verify:
+      - Vraag een SoH-rapport (Nissan-dealer of onafhankelijke batterijtest) en tel de capaciteitsbalkjes.
+      - Vraag hoe vaak de auto snel werd geladen.
+    questions:
+      - Hoeveel capaciteitsbalkjes heeft de accu nog? Is er een recent accurapport (SoH)?
+      - Werd de auto vooral thuis (AC) of vaak snel (DC) geladen?
+    test_drive:
+      - Laad de auto vooraf vol en kijk naar de voorspelde actieradius en het aantal balkjes.
+    sources:
+      - {title: "Recurrent: Nissan Leaf battery guide", url: "https://www.recurrentauto.com/guides/nissan-leaf"}
+      - {title: "Recharged: Nissan Leaf battery degradation", url: "https://recharged.com/articles/nissan-leaf-battery-degradation"}
+    reviewed: 2026-10-27
